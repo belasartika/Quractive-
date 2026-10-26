@@ -447,6 +447,16 @@ body.logged-in .shell{display:none}
 .modal-box h3{margin:0 0 8px;font-size:18px}
 .modal-box p{color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 6px}
 .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.streak-card{display:flex;align-items:center;gap:16px;background:linear-gradient(120deg,#fff8e8,#f0e6d6);border:1px solid #e9d9b0;border-radius:18px;padding:18px 20px;margin:17px 0}
+.streak-flame{font-size:42px;line-height:1}
+.streak-info b{display:block;font-size:26px;color:var(--ink)}
+.streak-info span{font-size:12px;color:var(--muted);line-height:1.5;display:block;max-width:300px}
+.streak-week{display:flex;gap:8px;margin-left:auto}
+.streak-day{text-align:center;font-size:10px;color:var(--muted)}
+.streak-day i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:white;font-style:normal;font-size:13px;font-weight:800;margin:0 auto 3px}
+.streak-day.on i{background:var(--gold);border-color:var(--gold);color:white}
+.streak-day.today i{border-color:var(--green)}
+@media(max-width:600px){.streak-card{flex-wrap:wrap}.streak-week{margin-left:0;width:100%;justify-content:space-between}}
 
 </style>
 </head>
@@ -588,7 +598,12 @@ body.logged-in .shell{display:none}
     <button class="menu-tile" onclick="showView('game')"><i>🎮</i>Hafiz Quest</button>
     <button class="menu-tile" onclick="showView('calendar')"><i>🌙</i>Kalender</button>
     <button class="menu-tile" onclick="showView('settings')"><i>🔔</i>Pengingat</button>
-  </div>
+</div>
+  <div class="streak-card">
+  <div class="streak-flame" id="streak-flame">🔥</div>
+  <div class="streak-info"><b id="streak-count">0 hari</b><span id="streak-text"></span></div>
+  <div class="streak-week" id="streak-week"></div>
+</div>
   <div class="stats">
     <div class="stat"><span>Target harian</span><b id="daily-min">10 menit</b><small>Waktu pilihanmu</small></div>
     <div class="stat"><span>XP terkumpul</span><b id="xp-total">0 XP</b><small>Demo progress</small></div>
@@ -1312,7 +1327,54 @@ function useGameHint(){
   hintTimeoutId=setTimeout(()=>target.classList.remove('hint-target'),3000);
 }
 
+/* ===== STREAK HARIAN ===== */
+function dayKey(d){const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())}
+function ensureStreak(){
+  gs.streak=gs.streak||{count:0,best:0,last:''};
+  gs.days=gs.days||{};
+}
+function streakNow(){
+  ensureStreak();
+  const t=new Date(),y=new Date();y.setDate(y.getDate()-1);
+  const last=gs.streak.last;
+  if(last===dayKey(t)||last===dayKey(y))return gs.streak.count;
+  return 0;
+}
+function recordActivity(){
+  ensureStreak();
+  const today=dayKey(new Date());
+  if(gs.streak.last===today)return;
+  const y=new Date();y.setDate(y.getDate()-1);
+  gs.streak.count=(gs.streak.last===dayKey(y))?gs.streak.count+1:1;
+  gs.streak.best=Math.max(gs.streak.best||0,gs.streak.count);
+  gs.streak.last=today;
+  gs.days[today]=1;
+  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-60);
+  Object.keys(gs.days).forEach(k=>{if(k<dayKey(cutoff))delete gs.days[k]});
+  saveGame();
+  toast('🔥 Streak '+gs.streak.count+' hari! Pertahankan ya.');
+}
+function renderStreak(){
+  const cEl=document.getElementById('streak-count');if(!cEl)return;
+  ensureStreak();
+  const n=streakNow(),doneToday=gs.streak.last===dayKey(new Date());
+  cEl.textContent=n+' hari';
+  document.getElementById('streak-flame').style.opacity=n>0?'1':'.35';
+  document.getElementById('streak-text').textContent=
+    n===0?'Mulai streak-mu hari ini dengan bermain Hafiz Quest.':
+    doneToday?'Hebat! Hari ini sudah tercatat. Rekor terbaik: '+gs.streak.best+' hari.':
+    'Belum ada aktivitas hari ini. Mainkan satu ronde supaya streak '+n+' harimu tidak putus.';
+  const names=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+  let html='';
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const on=!!gs.days[dayKey(d)];
+    html+=`<div class="streak-day ${on?'on':''} ${i===0?'today':''}"><i>${on?'✓':''}</i>${names[d.getDay()]}</div>`;
+  }
+  document.getElementById('streak-week').innerHTML=html;
+}
 function addXP(goal,amt,quiet){
+  recordActivity();
   if(!chosenGoals.has(goal)){if(!quiet)toast('XP tidak bertambah: goal "'+goalNames[goal][0]+'" belum kamu pilih.');return false}
   gs.xp+=amt;saveGame();updateGameStats();return true;
 }
@@ -1325,6 +1387,7 @@ function updateGameStats(){
   document.getElementById('xp-total').textContent=gs.xp+' XP';
   document.getElementById('game-level').textContent='Level '+(Math.floor(gs.xp/100)+1);
   document.getElementById('game-count').textContent=done+'/30';
+  renderStreak();
 }
 function renderJuzMap(){
   document.getElementById('juz-map-wrap').classList.remove('hidden');
