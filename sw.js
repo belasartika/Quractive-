@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "quractive-v2";
+const CACHE_NAME = "quractive-v3";
 const BASE = self.registration.scope;
 
 const FILES_TO_CACHE = [
@@ -24,8 +24,10 @@ self.addEventListener("activate", event => {
     caches.keys().then(keys =>
       Promise.all(
         keys
-          .filter(key => key.startsWith("quractive-") &&
-                         key !== CACHE_NAME)
+          .filter(key =>
+            key.startsWith("quractive-") &&
+            key !== CACHE_NAME
+          )
           .map(key => caches.delete(key))
       )
     )
@@ -34,6 +36,7 @@ self.addEventListener("activate", event => {
   self.clients.claim();
 });
 
+// Cache website agar bisa dibuka saat offline
 self.addEventListener("fetch", event => {
   const request = event.request;
   const url = new URL(request.url);
@@ -70,12 +73,68 @@ self.addEventListener("fetch", event => {
           if (home) return home;
         }
 
-        return new Response("Halaman tidak tersedia saat offline.", {
-          status: 503,
-          headers: {
-            "Content-Type": "text/plain; charset=utf-8"
+        return new Response(
+          "Halaman tidak tersedia saat offline.",
+          {
+            status: 503,
+            headers: {
+              "Content-Type": "text/plain; charset=utf-8"
+            }
           }
-        });
+        );
       })
+  );
+});
+
+// Menerima push notification saat halaman tidak dibuka
+self.addEventListener("push", event => {
+  let payload = {};
+
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch (error) {
+    payload = {
+      body: event.data ? event.data.text() : ""
+    };
+  }
+
+  const data = payload.data || payload;
+  const title = data.title || "Pengingat Quractive";
+  const options = {
+    body: data.body || "Waktunya melanjutkan kegiatan Quractive.",
+    icon: new URL("./icon-192.png", BASE).href,
+    badge: new URL("./icon-192.png", BASE).href,
+    data: {
+      url: data.url || BASE
+    }
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+// Membuka Quractive saat notifikasi ditekan
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+
+  const targetUrl = new URL(
+    event.notification.data?.url || BASE,
+    BASE
+  ).href;
+
+  event.waitUntil(
+    clients.matchAll({
+      type: "window",
+      includeUncontrolled: true
+    }).then(windowClients => {
+      for (const client of windowClients) {
+        if (client.url === targetUrl && "focus" in client) {
+          return client.focus();
+        }
+      }
+
+      return clients.openWindow(targetUrl);
+    })
   );
 });
