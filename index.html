@@ -867,7 +867,9 @@ async function aktifkanNotifikasi() {
   }
 }
 window.aktifkanNotifikasi = aktifkanNotifikasi;
-
+window.quractiveAuth = auth;
+window.quractiveDb = db;
+  
 function enterApp() {
   document.body.classList.add("logged-in");
   if (window.refreshProfileUI) window.refreshProfileUI(auth.currentUser);
@@ -1826,7 +1828,7 @@ async function saveReminder() {
     return;
   }
 
-  const user = auth.currentUser;
+  const user = window.quractiveAuth?.currentUser;
 
   if (!user) {
     toast('Silakan login terlebih dahulu.');
@@ -1835,7 +1837,7 @@ async function saveReminder() {
 
   try {
     await setDoc(
-      doc(db, 'users', user.uid),
+      doc(window.quractiveDb, 'users', user.uid),
       {
         reminderDay: day,
         reminderTime: time,
