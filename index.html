@@ -524,7 +524,7 @@ body.logged-in .shell{display:none}
     </section>
 
     <div id="notice" class="auth-notice" role="status" aria-live="polite"></div>
-    <div class="smallprint">Quractive · Login terhubung ke Firebase Authentication.<br>Jalankan melalui localhost (mis. VS Code Live Server), bukan dengan membuka file langsung.</div>
+    <div class="smallprint">Quractive.</div>
   </main>
 </div>
 
@@ -701,13 +701,12 @@ body.logged-in .shell{display:none}
 <section id="view-calendar" class="view">
   <div class="eyebrow">Plan your ibadah</div>
   <h1 class="h1" style="font-size:38px">Kalender Hijriah</h1>
-  <p class="lead">Lihat contoh kalender dan pilih puasa sunnah yang ingin kamu ingat. Tanggal Hijriah pada prototype ini adalah perkiraan.</p>
+  <p class="lead">Temukan hari-hari istimewa dalam Islam dan persiapkan ibadah terbaikmu. Tandai jadwal puasa sunnah dan momen penting dalam kalender Hijriah.</p>
   <div class="two-col" style="margin-top:22px">
     <div class="card">
       <div class="calendar-head"><button class="btn secondary small" onclick="changeMonth(-1)">←</button><div style="text-align:center"><h3 id="month-label" style="margin:0">Oktober 2026</h3><div class="muted">Kalender Masehi dan Hijriah</div></div><button class="btn secondary small" onclick="changeMonth(1)">→</button></div>
       <div id="hijri-month-ranges" class="hijri-month-ranges" aria-live="polite"></div>
       <div class="calendar-grid" id="calendar-grid"></div>
-      <div class="notice">Tanggal Hijriah (bertanda *) hanya perkiraan. Gunakan sumber kalender resmi dan sediakan penyesuaian lokal pada implementasi nyata.</div>
     </div>
     <div class="card">
       <div class="card-title"><h3>Sunnah Reminder</h3><span>☾</span></div>
@@ -758,13 +757,12 @@ body.logged-in .shell{display:none}
       </div>
       <button class="btn secondary" id="btn-masjid" onclick="cekMasjidTerdekat()">Cek masjid terdekat</button>
 
-      <div class="notice">Prototype ini tidak mengirim notifikasi sungguhan. Lokasi hanya dipakai sesaat untuk membuka pencarian di Google Maps dan tidak disimpan.</div>
     </div>
   </div>
 </section>
 
 </main>
-<footer class="footer">daq apa ini · eak · Prototype bela tia</footer>
+<footer class="footer">made by a student, for a better routine.</footer>
 <div class="modal-back" id="daud-modal">
   <div class="modal-box">
     <h3>Mulai Puasa Daud</h3>
