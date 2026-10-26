@@ -1,0 +1,15 @@
+
+name: Quractive Background Reminders
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-reminders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check workflow
+        run: echo "Quractive reminder workflow is ready."
