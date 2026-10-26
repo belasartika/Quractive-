@@ -766,6 +766,12 @@ body.logged-in .shell{display:none}
 <!-- ================= SCRIPT 1: FIREBASE (module) ================= -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import {
+  getMessaging,
+  getToken,
+  onMessage,
+  isSupported
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js";
 import {
   getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup,
   createUserWithEmailAndPassword, signInWithEmailAndPassword,
