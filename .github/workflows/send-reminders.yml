@@ -3,13 +3,22 @@ name: Quractive Background Reminders
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   check-reminders:
     runs-on: ubuntu-latest
     steps:
-      - name: Check workflow
-        run: echo "Quractive reminder workflow is ready."
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: "projects/556525312233/locations/global/workloadIdentityPools/quractive-github-actions/providers/github-provider"
+          service_account: "quractive-reminder-sender@daq-prototype.iam.gserviceaccount.com"
+
+      - name: Check authentication
+        run: echo "Quractive successfully authenticated with Google Cloud."
