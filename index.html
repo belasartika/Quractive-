@@ -3,15 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quractive · Masuk atau Daftar</title>                             
+<title>Quractive · Masuk atau Daftar</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#14606d">
 <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
 <style>
-/* ===== VARIABEL ===== */
-:root{--bg:#f5f4ec;--card:#fffef9;--text:#163b3a;--muted:#708184;--line:#e3e9e5;--primary:#17666a;--primary2:#0e5157;--soft:#e8f1e9;--field:#fbfbf7;--shadow:0 14px 38px rgba(22,62,63,.08);
---green:#14606d;--deep:#0d414a;--mint:#e8f2ee;--cream:#fbfaf5;--gold:#d8b568;--ink:#203437;--white:#fff}
-body.dark{--bg:#0c1717;--card:#132222;--text:#eff8ef;--muted:#a9bbb5;--line:#29413e;--primary:#91d6b5;--primary2:#6bc49d;--soft:#203a34;--field:#102020;--shadow:0 18px 55px #0005}
+/* ===== PALET WARNA QURACTIVE: MOCHA, IVORY & GOLD ===== */
+:root {
+  --bg: #F7F2E8;
+  --card: #FFFCF5;
+  --text: #49382D;
+  --muted: #9A8668;
+  --line: #E5D9C7;
+  --primary: #806348;
+  --primary2: #5C4435;
+  --soft: #EFE5D5;
+  --field: #FFFDF8;
+  --shadow: 0 14px 38px rgba(92, 68, 53, 0.10);
+  --green: #806348;
+  --deep: #5C4435;
+  --mint: #F0E6D6;
+  --cream: #F7F2E8;
+  --gold: #F4B51C;
+  --ink: #49382D;
+  --white: #FFFCF5;
+}
+body.dark {
+  --bg: #241E19;
+  --card: #332920;
+  --text: #F7F0E5;
+  --muted: #C4B29A;
+  --line: #514337;
+  --primary: #C7A77D;
+  --primary2: #E0C39A;
+  --soft: #44372B;
+  --field: #2D241D;
+  --shadow: 0 18px 55px rgba(0, 0, 0, 0.25);
+  --green: #C7A77D;
+  --deep: #E0C39A;
+  --mint: #44372B;
+  --cream: #241E19;
+  --gold: #F4B51C;
+  --ink: #F7F0E5;
+  --white: #332920;
+}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;transition:background .25s,color .25s;overflow-x:hidden}
 body:not(.logged-in){display:grid;place-items:center;padding:24px}
@@ -25,6 +60,59 @@ a{color:var(--primary);text-decoration:none;font-weight:650;cursor:pointer}
 a:hover{text-decoration:underline}
 h1{font-family:Georgia,serif;letter-spacing:-.6px}
 .hidden{display:none!important}
+
+
+/* ===== LOADING SCREEN ===== */
+body.auth-checking .shell,
+body.auth-checking .app {
+  display: none !important;
+}
+
+body:not(.auth-checking) #loading-screen { display: none !important; }
+
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: #0d2927;
+  color: #fbfaf5;
+  font-family: Georgia, serif;
+}
+
+#loading-screen .loading-brand {
+  font-size: 38px;
+  font-weight: bold;
+  letter-spacing: -1px;
+}
+
+#loading-screen .loading-brand span {
+  color: #58a77f;
+}
+
+#loading-screen .loading-text {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #c4d7cf;
+}
+
+#loading-screen .loading-spinner {
+  width: 27px;
+  height: 27px;
+  border: 3px solid #ffffff30;
+  border-top-color: #91d6b5;
+  border-radius: 50%;
+  animation: quractive-spin .8s linear infinite;
+}
+
+@keyframes quractive-spin {
+  to { transform: rotate(360deg); }
+}
+
 
 /* ===== LOGIN ===== */
 .shell{width:min(100%,980px);min-height:610px;background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
@@ -130,11 +218,15 @@ body.logged-in .shell{display:none}
 .dash-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}
 .dash-top h1{font-size:34px;margin:6px 0}
 .date-chip{background:white;border:1px solid var(--line);padding:12px 15px;border-radius:13px;font-size:12px;color:var(--muted)}
-.welcome{background:var(--green);color:white;border-radius:22px;padding:27px;display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;overflow:hidden}
+.welcome{background:var(--green);color:white;border-radius:22px;padding:27px;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;overflow:hidden;min-height:170px}
+.welcome>div:first-child{min-width:0;flex:1}
+.welcome-mark img{background:transparent}
 .welcome h2{font-size:25px;letter-spacing:-.7px;margin:7px 0}
 .welcome p{color:#d3e5df;font-size:13px;line-height:1.6;max-width:490px}
 .welcome .btn{background:#f7e8be;color:var(--deep);box-shadow:none}
-.welcome-mark{font-size:80px;opacity:.9}
+.welcome-mark{width:88px;height:88px;flex:0 0 88px;display:flex;align-items:center;justify-content:center;opacity:1}
+.welcome-mark img{display:block;width:72px;height:72px;max-width:72px;max-height:72px;object-fit:contain;border-radius:12px}
+.brand-logo{width:46px;height:46px;object-fit:contain;border-radius:12px;flex-shrink:0;display:block}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:17px 0}
 .stat{background:white;border:1px solid var(--line);padding:17px;border-radius:16px}
 .stat span{font-size:12px;color:var(--muted)}
@@ -195,7 +287,7 @@ body.logged-in .shell{display:none}
 .day .gregorian-day{display:block;font-weight:800;font-size:13px}
 .day .hijri{display:block;font-size:9px;line-height:1.25;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}
 .day .hijri-year{display:block;font-size:9px;color:var(--muted);margin-top:2px}
-.day .sunnah-mark{display:block;font-size:9px;color:var(--green);margin-top:3px}
+.day .sunnah-mark{display:block;font-size:9px;line-height:1.25;color:var(--green);margin-top:3px;overflow-wrap:anywhere}
 .day.marked{border-color:#9dc9b4;background:#f0f7f2}
 .day.today{background:var(--green);color:white}
 .day.today .hijri{color:#d8e9e2}
@@ -237,6 +329,49 @@ body.logged-in .shell{display:none}
 .confetti{position:fixed;top:-20px;font-size:22px;z-index:50;pointer-events:none;animation:fall 2.2s linear forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.7}}
 @media(max-width:800px){.juz-map{grid-template-columns:repeat(3,1fr)}.chip{font-size:22px;padding:5px 12px}}
+/* ===== GAME INTERAKTIF ===== */
+.game-mode-panel{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 14px}
+.game-mode{flex:1;min-width:190px;text-align:left;padding:15px 16px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink);transition:.2s}
+.game-mode:hover{transform:translateY(-2px);border-color:var(--green)}
+.game-mode.active{border-color:var(--green);background:var(--mint);box-shadow:0 0 0 2px #14606d12}
+.game-mode b{display:block;margin-bottom:5px;font-size:14px}
+.game-mode small{display:block;color:var(--muted);line-height:1.5;font-size:11px}
+.game-mission{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid #d9cba5;border-radius:14px;background:linear-gradient(120deg,#fff9e9,#f4f7ed);margin:12px 0 18px;color:#594d2d;font-size:12px;line-height:1.5}
+.game-mission .mission-icon{font-size:24px}
+.game-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:10px 0}
+.game-timer{font-weight:800;font-size:12px;padding:7px 11px;border-radius:99px;background:var(--mint);color:var(--green)}
+.game-timer.urgent{background:#fff0ed;color:#a33e32;animation:pulse .7s infinite alternate}
+@keyframes pulse{to{transform:scale(1.04)}}
+.chip.hint-target{border-color:#d6a92d!important;background:#fff4c9!important;box-shadow:0 0 0 3px #e9c85b44;animation:pop .25s}
+.game-feedback-good{color:#176b48;font-weight:750}
+.game-feedback-bad{color:#a33e32;font-weight:750}
+@media(max-width:600px){.game-mode-panel{display:grid;grid-template-columns:1fr}.game-mission{align-items:flex-start}}
+
+
+/* Mixed challenge game */
+.game-type-pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:#dcefe5;color:#175c49;padding:6px 11px;font-size:11px;font-weight:800;margin-bottom:10px}
+.game-prompt{font-size:18px;font-weight:800;line-height:1.5;color:var(--ink)}
+.game-question .arabic,.game-arabic{font-family:"Amiri",serif;font-size:30px;line-height:1.9;direction:rtl;margin-top:10px}
+.bank.mc-options{direction:ltr;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;margin-top:18px}
+.mc-option{font-family:inherit;font-size:14px;line-height:1.5;min-height:54px;white-space:normal;direction:auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:13px;padding:12px;cursor:pointer;transition:.18s}
+.mc-option:hover{transform:translateY(-2px);border-color:var(--green);background:var(--mint)}
+.mc-option:disabled{cursor:default;opacity:.8}
+.mc-option.correct{border-color:#23865b;background:#e4f7eb;color:#145a3a}
+.mc-option.wrong{border-color:#c85d52;background:#fff0ed;color:#923a32}
+.game-streak{font-size:12px;font-weight:800;color:#a56d08}
+.quest-hero{display:flex;align-items:center;gap:18px;margin:16px 0;padding:20px;background:linear-gradient(120deg,#f0f8f2,#fff8e8);border-color:#dbe8dc}
+.quest-mascot{width:94px;height:94px;flex:0 0 94px;display:grid;place-items:center;border-radius:28px;background:linear-gradient(145deg,#d9eee1,#fff1c9);font-size:54px;box-shadow:inset 0 -5px 0 #164f3a12;animation:mascotBob 2.5s ease-in-out infinite}
+@keyframes mascotBob{50%{transform:translateY(-5px) rotate(2deg)}}
+.quest-hero h2,.select-head h2{margin:4px 0;font-family:Georgia,serif;color:var(--ink)}.quest-hero p,.select-head p{margin:5px 0 0;color:#61736c;font-size:13px;line-height:1.6}
+.select-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 12px}
+.quest-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.quest-card{border:1px solid var(--line);border-radius:17px;padding:16px;background:var(--card);text-align:left;color:var(--ink);transition:.2s;min-height:150px}
+.quest-card:hover{transform:translateY(-3px);border-color:var(--green);box-shadow:0 10px 25px #174e4010}
+.quest-card .quest-icon{font-size:29px;display:block;margin-bottom:9px}.quest-card b{display:block;font-size:14px;margin-bottom:5px}.quest-card small{display:block;color:var(--muted);font-size:11px;line-height:1.5}.quest-card .quest-tag{display:inline-block;margin-top:10px;padding:4px 7px;border-radius:7px;background:var(--mint);color:var(--green);font-size:10px;font-weight:800}
+.quest-bottom{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0 24px;padding:15px;border:1px solid var(--line);border-radius:15px;background:var(--card)}.quest-bottom label{font-size:12px;font-weight:800}.quest-select{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--field);color:var(--ink);flex:1;min-width:190px}
+.companion-line{display:flex;align-items:center;gap:9px;margin:8px 0;padding:9px 12px;border-radius:12px;background:#f0f7f2;color:#355e4b;font-size:12px}.companion-line span{font-size:24px}
+@media(max-width:700px){.quest-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.quest-hero{align-items:flex-start;padding:14px}.quest-mascot{width:66px;height:66px;flex-basis:66px;font-size:38px;border-radius:20px}.select-head{align-items:flex-start}.quest-bottom{align-items:stretch;flex-direction:column}}
+@media(max-width:600px){.bank.mc-options{grid-template-columns:1fr}.game-prompt{font-size:16px}.game-question .arabic,.game-arabic{font-size:25px}}
 
 /* ===== NAV ALA APLIKASI HP ===== */
 .nav button i{display:none;font-style:normal}
@@ -279,7 +414,6 @@ body.logged-in .shell{display:none}
   .stats{grid-template-columns:1fr 1fr}
   .stats .stat:last-child{grid-column:span 2}
   .goal-list,.fast-list{grid-template-columns:1fr}
-  .welcome-mark{display:none}
   .dash-top{align-items:flex-start;flex-direction:column}
   .calendar-grid{gap:3px}
   .day{min-height:72px;padding:5px 3px;font-size:10px}
@@ -298,9 +432,33 @@ body.logged-in .shell{display:none}
   .menu-grid{grid-template-columns:repeat(2,1fr)}
   .main,.footer{padding-bottom:40px}
 }
+
+@media(max-width:600px){
+  .welcome{padding:22px;gap:12px;min-height:150px}
+  .welcome h2{font-size:22px}
+  .welcome p{font-size:12px}
+  .welcome-mark{width:64px;height:64px;flex-basis:64px}
+  .welcome-mark img{width:58px;height:58px;max-width:58px;max-height:58px}
+}
+
+.modal-back{position:fixed;inset:0;background:rgba(36,30,25,.55);display:none;align-items:center;justify-content:center;z-index:60;padding:16px}
+.modal-back.show{display:flex}
+.modal-box{background:white;border:1px solid var(--line);border-radius:20px;padding:24px;width:min(100%,380px);box-shadow:var(--shadow)}
+.modal-box h3{margin:0 0 8px;font-size:18px}
+.modal-box p{color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 6px}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+
 </style>
 </head>
-<body>
+
+<body class="auth-checking">
+
+<div id="loading-screen">
+  <div class="loading-brand">Quractive<span>.</span></div>
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Menyiapkan perjalanan Qur’anmu...</div>
+</div>
+
 
 <!-- ================= LOGIN ================= -->
 <div class="shell">
@@ -363,7 +521,7 @@ body.logged-in .shell{display:none}
 <!-- ================= DASHBOARD ================= -->
 <div class="app">
 <header class="topbar">
-  <div class="brand"><div class="brand-mark">۞</div><span>Qur<em>active</em></span></div>
+  <div class="brand"><img src="icon-512.png" alt="Logo Quractive" class="brand-logo"><span>Qur<em>active</em></span></div>
   <div class="profile-wrap" id="profile-wrap">
     <button class="profile" id="profile-btn" onclick="toggleProfileMenu(event)" title="Akun saya" aria-haspopup="true" aria-expanded="false">Q</button>
     <div class="profile-menu" id="profile-menu" role="menu">
@@ -424,7 +582,7 @@ body.logged-in .shell{display:none}
 <!-- Dashboard personal -->
 <section id="view-dashboard" class="view">
   <div class="dash-top"><div><div class="eyebrow">Personal dashboard</div><h1 id="dash-greeting">Assalamu'alaikum! 🌿</h1><div class="muted">Perjalanan kecil yang konsisten tetap berarti.</div></div><div class="date-chip">✧ My Quractive Journey</div></div>
-  <div class="welcome"><div><div class="eyebrow" style="color:#d5e9df">YOUR JOURNEY TODAY</div><h2 id="welcome-title">Mulai dari satu ayat.</h2><p id="welcome-text">Luangkan waktu untuk membaca dan memahami Al-Qur'an sesuai ritmemu.</p></div><div class="welcome-mark">۞</div></div>
+  <div class="welcome"><div><div class="eyebrow" style="color:#d5e9df">YOUR JOURNEY TODAY</div><h2 id="welcome-title">Mulai dari satu ayat.</h2><p id="welcome-text">Luangkan waktu untuk membaca dan memahami Al-Qur'an sesuai ritmemu.</p></div><div class="welcome-mark"><img src="icon-512.png" alt="Logo Quractive"></div></div>
     <div class="menu-grid">
     <button class="menu-tile" onclick="showView('quran')"><i>📖</i>Al-Qur'an</button>
     <button class="menu-tile" onclick="showView('game')"><i>🎮</i>Hafiz Quest</button>
@@ -478,14 +636,29 @@ body.logged-in .shell{display:none}
 <section id="view-game" class="view active">
   <div class="eyebrow">Hafiz Quest · Murajaah game</div>
   <h1 class="h1" style="font-size:38px">Taklukkan 30 Juz.</h1>
-  <p class="lead">Susun kata-kata ayat dengan urutan yang benar. Santai, tanpa batas waktu. Kumpulkan bintang di tiap juz.</p>
+  <p class="lead">Susun kata-kata ayat dengan urutan yang benar, kumpulkan XP, pecahkan rekor combo, dan taklukkan semua juz dengan caramu sendiri.</p>
   <div class="stats">
     <div class="stat"><span>Level</span><b id="game-level">Level 1</b><small>Naik tiap 100 XP</small></div>
-    <div class="stat"><span>Total XP</span><b id="game-xp">0 XP</b><small>Kata benar +2, ayat selesai +10</small></div>
+    <div class="stat"><span>Total XP</span><b id="game-xp">0 XP</b><small>Jawaban benar, combo, dan bonus tantangan</small></div>
     <div class="stat"><span>Juz selesai</span><b id="game-count">0/30</b><small>Bebas pilih juz</small></div>
   </div>
 
+  <div class="game-mission"><span class="mission-icon">🎯</span><div><b>Misi hari ini: taklukkan 5 tantangan campuran!</b><br>Jenis tantangan berubah setiap ronde. Jaga 3 nyawa, bangun combo, kumpulkan XP, dan raih bintang. Progres tersimpan di browser ini.</div></div>
+  <div class="game-mode-panel" aria-label="Pilih mode permainan">
+    <button type="button" class="game-mode active" id="mode-calm" onclick="setGameMode('calm')"><b>🌿 Mode Santai</b><small>Tanpa timer, fokus belajar dan pahami penjelasan.</small></button>
+    <button type="button" class="game-mode" id="mode-rush" onclick="setGameMode('rush')"><b>⚡ Mode Kilat</b><small>Jawab tiap tantangan dalam 20 detik untuk bonus XP.</small></button>
+  </div>
   <div id="juz-map-wrap"><div class="juz-map" id="juz-map"></div></div>
+
+  <div id="game-select-wrap" class="hidden">
+    <div class="quest-hero card">
+      <div class="quest-mascot" id="quest-mascot">🦉</div>
+      <div class="quest-hero-copy"><span class="game-type-pill">🌙 PETUALANGAN BARU</span><h2 id="select-title">Pilih misi Juz 1</h2><p id="mascot-line">Hai, teman Quractive! Pilih tantangan yang ingin kamu taklukkan. Aku temani sampai garis akhir!</p></div>
+    </div>
+    <div class="select-head"><div><h2>Pilih jenis permainan</h2><p class="muted">Setiap juz punya beberapa jalur latihan. Pilih satu atau acak semuanya!</p></div><button class="btn secondary small" onclick="backToJuzMap()">← Peta Juz</button></div>
+    <div class="quest-grid" id="quest-grid"></div>
+    <div class="quest-bottom"><label for="difficulty-select">Tingkat tantangan</label><select id="difficulty-select" class="quest-select"><option value="easy">🌱 Pemula — petunjuk lebih banyak</option><option value="medium" selected>🌿 Petualang — seimbang</option><option value="hard">🔥 Ahli — pilihan lebih mengecoh</option></select><button class="btn" onclick="launchGameType('mixed')">🎲 Mulai Petualangan Campuran</button></div>
+  </div>
 
   <div id="play-area" class="card hidden" style="max-width:760px;margin:auto">
     <div class="card-title">
@@ -494,14 +667,17 @@ body.logged-in .shell{display:none}
       <span class="hearts" id="pa-hearts"></span>
     </div>
     <div class="pbar"><i id="pa-bar"></i></div>
-    <div class="muted" style="display:flex;justify-content:space-between;margin-top:8px"><span id="pa-round"></span><span id="pa-combo"></span></div>
+    <div class="muted" style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:8px"><span id="pa-round"></span><span id="pa-combo"></span></div>
+    <div class="companion-line"><span>🦉</span><div><b>Nuri menemani petualanganmu</b><div id="companion-message">Kamu pasti bisa! Kumpulkan XP dan jaga combo.</div></div></div>
+    <div class="game-toolbar"><span class="game-timer" id="pa-timer">🌿 Santai · tanpa timer</span><button type="button" class="btn secondary small" id="pa-hint" onclick="useGameHint()">💡 Petunjuk kata</button></div>
     <div class="game-question">
-      <div class="muted">Ketuk kata dari kanan sesuai urutan ayat. Petunjuk artinya:</div>
-      <div id="pa-clue" style="margin-top:8px;font-style:italic;font-size:14px;line-height:1.6"></div>
+      <div id="pa-type" class="game-type-pill">🎲 Tantangan acak</div>
+      <div id="pa-prompt" class="game-prompt">Siap memulai petualangan Quractive?</div>
+      <div id="pa-clue" style="margin-top:10px;font-style:italic;font-size:14px;line-height:1.7"></div>
     </div>
     <div class="slot" id="pa-slot"></div>
     <div class="bank" id="pa-bank"></div>
-    <div id="pa-feedback"></div>
+    <div id="pa-feedback" aria-live="polite"></div>
   </div>
   <div class="notice">Game ini latihan pengenalan urutan kata ayat, bukan penilaian tajwid atau sertifikasi hafalan.</div>
 </section>
@@ -547,8 +723,11 @@ body.logged-in .shell{display:none}
       <div class="setting-row"><div><b>Pengingat salat Jumat</b><p>Aktifkan untuk mencari masjid terdekat</p></div><button class="toggle" aria-label="Toggle pengingat Jumat" onclick="toggleFriday(this)"><span></span></button></div>
       <div class="setting-row"><div><b>Daily Qur'an reminder</b><p>Pengingat target membaca harian</p></div><button class="toggle on" aria-label="Toggle pengingat Quran" onclick="toggle(this)"><span></span></button></div>
       <div class="field"><label for="reminder-day">Pengingat puasa</label><select id="reminder-day"><option value="2">Dua hari sebelumnya</option><option value="1" selected>Satu hari sebelumnya</option><option value="0">Pada hari puasa</option></select></div>
-      <div class="field"><label for="reminder-time">Waktu notifikasi</label><select id="reminder-time"><option>18.00</option><option selected>20.00</option><option>04.00</option></select></div>
-      <button class="btn" onclick="saveReminder()">Simpan pengaturan</button>
+      <div class="field"><label for="reminder-time">Waktu notifikasi</label><input type="time" id="reminder-time" value="20:00"><span class="muted" id="notif-status"></span></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" onclick="saveReminder()">Simpan pengaturan</button>
+        <button class="btn secondary" onclick="testNotif()">Tes notifikasi</button>
+      </div>
     </div>
     <div class="card"><div class="card-title"><h3>Friday Prayer Connect</h3><span>☾</span></div>
       <p>Cari masjid di sekitarmu lewat Google Maps. Pakai lokasi perangkat, atau ketik nama daerahmu kalau lokasi otomatis kurang akurat.</p>
@@ -570,6 +749,17 @@ body.logged-in .shell{display:none}
 
 </main>
 <footer class="footer">daq apa ini · eak · Prototype bela tia</footer>
+<div class="modal-back" id="daud-modal">
+  <div class="modal-box">
+    <h3>Mulai Puasa Daud</h3>
+    <p>Puasa Daud: sehari puasa, sehari tidak. Pilih tanggal pertama kamu berpuasa.</p>
+    <div class="field"><label for="daud-date">Tanggal mulai</label><input type="date" id="daud-date"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="cancelDaud()">Batal</button>
+      <button class="btn" onclick="confirmDaud()">Simpan tanggal</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 </div>
 
@@ -607,7 +797,12 @@ function leaveApp() {
   if (window.closeProfileMenu) window.closeProfileMenu();
 }
 
-onAuthStateChanged(auth, (user) => { if (user) enterApp(); else leaveApp(); });
+onAuthStateChanged(auth, (user) => {
+  if (user) enterApp();
+  else leaveApp();
+
+  document.body.classList.remove("auth-checking");
+});
 
 const notice = document.getElementById("notice");
 function message(text) { notice.textContent = text; notice.classList.add("show"); }
@@ -973,12 +1168,63 @@ function saveBookmark(){
 
 /* ===== GAME ===== */
 /* ===== HAFIZ QUEST: 30 JUZ ===== */
-const ROUNDS=5;
+const ROUNDS=10;
 let gs;
 try{gs=JSON.parse(localStorage.getItem('quractiveGame')||'null')}catch(e){}
 if(!gs)gs={xp:Number(localStorage.getItem('quractiveXP')||0),stars:{}};
 gs.read=gs.read||{};gs.fasts=gs.fasts||{};
 let g=null;
+let selectedGameMode='calm';
+let gameTimerId=null;
+let hintTimeoutId=null;
+
+function clearGameTimers(){
+  if(gameTimerId){clearInterval(gameTimerId);gameTimerId=null}
+  if(hintTimeoutId){clearTimeout(hintTimeoutId);hintTimeoutId=null}
+}
+function setGameMode(mode){
+  selectedGameMode=mode==='rush'?'rush':'calm';
+  document.getElementById('mode-calm').classList.toggle('active',selectedGameMode==='calm');
+  document.getElementById('mode-rush').classList.toggle('active',selectedGameMode==='rush');
+  const mission=document.querySelector('.game-mission b');
+  if(mission)mission.textContent=selectedGameMode==='rush'?'Misi kilat: taklukkan 5 tantangan sebelum waktu habis!':'Misi hari ini: taklukkan 5 tantangan campuran!';
+  toast(selectedGameMode==='rush'?'Mode Kilat aktif ⚡':'Mode Santai aktif 🌿');
+}
+function startRoundTimer(){
+  if(gameTimerId){clearInterval(gameTimerId);gameTimerId=null}
+  const el=document.getElementById('pa-timer');
+  if(selectedGameMode!=='rush'){
+    el.textContent='🌿 Santai · tanpa timer';el.classList.remove('urgent');return;
+  }
+  g.timeLeft=20;
+  const paint=()=>{
+    el.textContent='⚡ '+g.timeLeft+' detik';
+    el.classList.toggle('urgent',g.timeLeft<=5);
+  };
+  paint();
+  gameTimerId=setInterval(()=>{
+    if(!g||g.busy){clearGameTimers();return}
+    g.timeLeft--;paint();
+    if(g.timeLeft<=0){
+      clearGameTimers();g.hearts--;g.combo=0;
+      if(g.hearts<=0){renderPlay();failJuz('Waktu habis! Nyawa terakhir terpakai.');}
+      else{
+        document.getElementById('pa-feedback').innerHTML='<div class="feedback"><b class="game-feedback-bad">⏰ Waktu habis!</b><br>Nyawa berkurang satu. Coba susun lagi dengan tenang.</div>';
+        loadRound(true);
+      }
+    }
+  },1000);
+}
+function useGameHint(){
+  if(!g||g.busy||g.placed>=g.words.length)return;
+  if(hintTimeoutId)clearTimeout(hintTimeoutId);
+  const buttons=[...document.querySelectorAll('#pa-bank button.chip:not(:disabled)')];
+  const target=buttons.find(b=>b.textContent.trim()===g.words[g.placed]);
+  if(!target){toast('Belum ada petunjuk yang tersedia.');return}
+  target.classList.add('hint-target');
+  document.getElementById('pa-feedback').innerHTML='<div class="feedback">💡 Kata berikutnya disorot warna emas. Ketuk kata itu untuk melanjutkan.</div>';
+  hintTimeoutId=setTimeout(()=>target.classList.remove('hint-target'),3000);
+}
 
 function addXP(goal,amt,quiet){
   if(!chosenGoals.has(goal)){if(!quiet)toast('XP tidak bertambah: goal "'+goalNames[goal][0]+'" belum kamu pilih.');return false}
@@ -1003,7 +1249,7 @@ function renderJuzMap(){
   }).join('');
   updateGameStats();
 }
-function exitJuz(){g=null;renderJuzMap()}
+function exitJuz(){clearGameTimers();g=null;renderJuzMap()}
 
 function juzRange(j){
   const [sS,sA]=JUZ_START[j-1];let eS,eA=null;
@@ -1026,72 +1272,184 @@ async function pickAyat(j,used,maxWords){
 }
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const k=Math.floor(Math.random()*(i+1));[a[i],a[k]]=[a[k],a[i]]}return a}
 
-async function startJuz(j){
-  await loadSurahList();
-  g={juz:j,round:0,hearts:3,combo:0,used:new Set(),busy:false};
-    g.goal=gs.stars[j]?'murajaah':'hafal';
-  if(!chosenGoals.has(g.goal))toast('Goal "'+goalNames[g.goal][0]+'" belum dipilih, XP tidak bertambah di sesi ini.');
+let selectedJuzForGame=1;
+const QUEST_TYPES=[
+ {id:'continue',icon:'➡️',title:'Lanjutkan Ayat',desc:'Ingat ayat berikutnya dari potongan yang ditampilkan.',tag:'HAFALAN'},
+ {id:'meaning',icon:'💬',title:'Misi Arti Ayat',desc:'Cocokkan ayat Arab dengan terjemahan yang tepat.',tag:'PEMAHAMAN'},
+ {id:'surah',icon:'📚',title:'Detektif Nama Surah',desc:'Cari tahu surah asal dari potongan ayat.',tag:'IDENTIFIKASI'},
+ {id:'order',icon:'🧩',title:'Puzzle Susun Ayat',desc:'Susun kata-kata Arab menjadi urutan ayat yang benar.',tag:'PUZZLE'},
+ {id:'tajwid',icon:'🔎',title:'Tantangan Tajwid',desc:'Uji hukum bacaan dan aturan tajwid.',tag:'TAJWID'},
+ {id:'facts',icon:'🏺',title:'Misi Pengetahuan',desc:'Jawab tantangan tentang surah dan Al-Qur’an.',tag:'PENGETAHUAN'},
+ {id:'mixed',icon:'🎲',title:'Mode Acak',desc:'Campuran semua jenis tantangan. Kamu tidak tahu soal berikutnya!',tag:'KEJUTAN'}
+];
+function startJuz(j){
+  selectedJuzForGame=j;
   document.getElementById('juz-map-wrap').classList.add('hidden');
+  document.getElementById('play-area').classList.add('hidden');
+  document.getElementById('game-select-wrap').classList.remove('hidden');
+  document.getElementById('select-title').textContent='Pilih misi untuk Juz '+j;
+  document.getElementById('mascot-line').textContent=`Aku Nuri si Penjelajah! Kita punya 10 ronde di Juz ${j}. Pilih latihan favoritmu atau hadapi mode acak untuk bonus kejutan.`;
+  document.getElementById('quest-grid').innerHTML=QUEST_TYPES.map(t=>`<button class="quest-card" onclick="launchGameType('${t.id}')"><span class="quest-icon">${t.icon}</span><b>${t.title}</b><small>${t.desc}</small><span class="quest-tag">${t.tag}</span></button>`).join('');
+}
+function backToJuzMap(){clearGameTimers();g=null;document.getElementById('game-select-wrap').classList.add('hidden');renderJuzMap()}
+async function launchGameType(type){
+  await loadSurahList();clearGameTimers();
+  const difficulty=document.getElementById('difficulty-select').value;
+  g={juz:selectedJuzForGame,round:0,hearts:3,combo:0,used:new Set(),busy:false,mode:selectedGameMode,selectedType:type,difficulty,score:0,correct:0};
+  g.goal=gs.stars[g.juz]?'murajaah':'hafal';
+  if(!chosenGoals.has(g.goal))toast('Goal "'+goalNames[g.goal][0]+'" belum dipilih, XP tidak bertambah di sesi ini.');
+  document.getElementById('game-select-wrap').classList.add('hidden');
   document.getElementById('play-area').classList.remove('hidden');
-  document.getElementById('pa-title').textContent='Juz '+j;
+  document.getElementById('pa-title').textContent='Juz '+g.juz+' · '+(QUEST_TYPES.find(t=>t.id===type)?.title||'Petualangan Campuran');
+  document.getElementById('pa-feedback').innerHTML='';
   loadRound();
 }
-async function loadRound(){
+const TAJWID_QUIZ=[
+ {q:'Apa hukum nun sukun atau tanwin bertemu huruf ب?',opts:['Iqlab','Idgham bighunnah','Izhar halqi','Ikhfa haqiqi'],a:0,why:'Iqlab terjadi ketika nun sukun atau tanwin bertemu huruf ba (ب).'},
+ {q:'Berapa jumlah huruf izhar halqi?',opts:['4 huruf','5 huruf','6 huruf','7 huruf'],a:2,why:'Huruf izhar halqi ada enam: ء ه ع ح غ خ.'},
+ {q:'Mim sukun bertemu mim (م) dibaca dengan hukum apa?',opts:['Ikhfa syafawi','Idgham mimi','Izhar halqi','Iqlab'],a:1,why:'Mim sukun bertemu mim disebut idgham mimi atau idgham mitslain.'},
+ {q:'Apa yang dimaksud mad thabi’i?',opts:['Dibaca 1 harakat','Dibaca 2 harakat','Dibaca 4 harakat','Tidak boleh dipanjangkan'],a:1,why:'Mad thabi’i umumnya dibaca sepanjang dua harakat.'},
+ {q:'Nun sukun bertemu ي، ن، م، و termasuk…',opts:['Idgham bighunnah','Idgham bilaghunnah','Iqlab','Qalqalah'],a:0,why:'Idgham bighunnah berlaku pada ي ن م و dan dibaca dengan dengung.'},
+ {q:'Huruf qalqalah terkumpul dalam kata…',opts:['قطب جد','يرملون','خص ضغط قظ','ء ه ع ح غ خ'],a:0,why:'Huruf qalqalah ada lima: ق ط ب ج د.'},
+ {q:'Nun sukun bertemu ل atau ر hukumnya…',opts:['Idgham bighunnah','Idgham bilaghunnah','Ikhfa syafawi','Izhar'],a:1,why:'Lam dan ra termasuk huruf idgham bilaghunnah, tanpa dengung.'},
+ {q:'Mim sukun bertemu ب disebut…',opts:['Iqlab','Ikhfa syafawi','Idgham mimi','Mad wajib'],a:1,why:'Ikhfa syafawi terjadi ketika mim sukun bertemu ba.'}
+];
+const SURAH_QUIZ=[
+ {q:'Surah apakah yang dikenal sebagai Ummul Kitab dan dibaca pada setiap rakaat salat?',opts:['Al-Baqarah','Al-Fatihah','Al-Ikhlas','An-Nas'],a:1,why:'Al-Fatihah dikenal sebagai Ummul Kitab.'},
+ {q:'Surah terpanjang dalam Al-Qur’an adalah…',opts:['Ali Imran','An-Nisa','Al-Baqarah','Al-Maidah'],a:2,why:'Al-Baqarah adalah surah terpanjang dalam Al-Qur’an.'},
+ {q:'Surah yang terdiri dari empat ayat dan menegaskan keesaan Allah adalah…',opts:['Al-Kautsar','Al-Asr','Al-Ikhlas','Al-Falaq'],a:2,why:'Surah Al-Ikhlas terdiri dari empat ayat.'},
+ {q:'Surah penutup dalam urutan mushaf adalah…',opts:['Al-Falaq','Al-Ikhlas','Al-Lahab','An-Nas'],a:3,why:'An-Nas adalah surah ke-114 sekaligus surah terakhir dalam mushaf.'},
+ {q:'Surah yang menceritakan kisah Nabi Yusuf secara khusus adalah…',opts:['Maryam','Yusuf','Ibrahim','Nuh'],a:1,why:'Surah Yusuf memuat kisah Nabi Yusuf عليه السلام.'},
+ {q:'Surah yang dikenal dengan sebutan “jantung Al-Qur’an” dalam tradisi populer adalah…',opts:['Yasin','Ar-Rahman','Al-Mulk','Al-Waqiah'],a:0,why:'Yasin dikenal luas dengan sebutan tersebut dalam tradisi populer.'}
+];
+function mcQuestion(type,title,prompt,options,answer,why,extra=''){
+  g.kind='mc';g.type=type;g.typeTitle=title;g.prompt=prompt;g.options=options.map((text,i)=>({text,correct:i===answer}));g.options=shuffle(g.options);g.why=why;g.extra=extra;g.busy=false;
+}
+async function buildQuestion(pick){
+  const typeRoll={order:0,continue:1,surah:2,meaning:3,facts:4,tajwid:5};
+  let roll=g.selectedType==='mixed'?Math.floor(Math.random()*6):typeRoll[g.selectedType];
+  if(g.difficulty==='easy' && g.selectedType==='mixed' && Math.random()<.25) roll=0;
+  if(g.difficulty==='hard' && g.selectedType==='mixed' && Math.random()<.35) roll=5;
+  // Variasi tipe soal: susun ayat, lanjutkan ayat, tebak surah, arti ayat, dan tajwid.
+  if(roll===0){
+    g.kind='order';g.type='🧩 Susun potongan ayat';g.typeTitle='🧩 Susun Ayat';
+    g.words=pick.v.teksArab.trim().split(/\s+/);g.placed=0;
+    g.bank=shuffle(g.words.map((w,i)=>({w,i,used:false})));g.ref=`QS. ${pick.s.namaLatin}: ${pick.v.nomorAyat}`;
+    g.arti=pick.v.teksIndonesia;g.prompt='Susun kata-kata berikut sesuai urutan ayat.';g.clue='Petunjuk arti: “'+g.arti+'”';g.busy=false;return;
+  }
+  if(roll===1 && pick.v.nomorAyat<pick.s.jumlahAyat){
+    const next=pick.s.ayat.find(v=>v.nomorAyat===pick.v.nomorAyat+1);
+    if(next){
+      const pool=shuffle(pick.s.ayat.filter(v=>v.nomorAyat!==next.nomorAyat&&v.teksArab).slice()).slice(0,12);
+      const opts=shuffle([next,...pool.slice(0,3)]);
+      mcQuestion('continue','➡️ Lanjutkan Ayat','Ayat berikutnya setelah potongan ini adalah…',opts.map(v=>v.teksArab),opts.findIndex(v=>v.nomorAyat===next.nomorAyat),`Lanjutan yang benar adalah QS. ${pick.s.namaLatin} ayat ${next.nomorAyat}.`, 'arabic');
+      g.clue=`<div class="game-arabic">${pick.v.teksArab}</div><small>QS. ${pick.s.namaLatin} · ayat ${pick.v.nomorAyat}</small>`;g.ref=`QS. ${pick.s.namaLatin}: ${next.nomorAyat}`;return;
+    }
+  }
+  if(roll===2){
+    const pool=shuffle(surahList.filter(v=>v.nomor!==pick.s.nomor)).slice(0,3);
+    const opts=shuffle([pick.s,...pool]);
+    mcQuestion('surah','📚 Tebak Nama Surah','Ayat ini berasal dari surah apa?',opts.map(v=>v.namaLatin),opts.findIndex(v=>v.nomor===pick.s.nomor),`Benar, ayat ini berasal dari Surah ${pick.s.namaLatin}.`);
+    g.clue=`<div class="game-arabic">${pick.v.teksArab}</div><div style="margin-top:8px">${pick.v.teksIndonesia}</div>`;g.ref=`QS. ${pick.s.namaLatin}: ${pick.v.nomorAyat}`;return;
+  }
+  if(roll===3){
+    const ayatPool=shuffle(pick.s.ayat.filter(v=>v.nomorAyat!==pick.v.nomorAyat&&v.teksIndonesia)).slice(0,3);
+    const opts=shuffle([pick.v,...ayatPool]);
+    mcQuestion('meaning','💬 Tebak Arti Ayat','Pilih terjemahan yang sesuai dengan ayat berikut.',opts.map(v=>v.teksIndonesia),opts.findIndex(v=>v.nomorAyat===pick.v.nomorAyat),`Terjemahan yang sesuai: ${pick.v.teksIndonesia}`);
+    g.clue=`<div class="game-arabic">${pick.v.teksArab}</div><small>QS. ${pick.s.namaLatin} · ayat ${pick.v.nomorAyat}</small>`;g.ref=`QS. ${pick.s.namaLatin}: ${pick.v.nomorAyat}`;return;
+  }
+  if(roll===4){
+    const sq=SURAH_QUIZ[Math.floor(Math.random()*SURAH_QUIZ.length)];
+    mcQuestion('surah-facts','📖 Pengetahuan Surah',sq.q,sq.opts,sq.a,sq.why);
+    g.clue='Uji pengetahuanmu tentang nama dan fakta surah dalam Al-Qur’an.';g.ref='Pengetahuan Surah';return;
+  }
+  const tq=TAJWID_QUIZ[Math.floor(Math.random()*TAJWID_QUIZ.length)];
+  mcQuestion('tajwid','🔎 Tantangan Tajwid',tq.q,tq.opts,tq.a,tq.why);
+  g.clue='Pilih jawaban yang paling tepat. Setelah menjawab, baca penjelasannya.';g.ref='Kuis Tajwid';
+}
+async function loadRound(fromTimeout=false){
+  clearGameTimers();if(!g)return;
   document.getElementById('pa-feedback').innerHTML='';
-  document.getElementById('pa-clue').textContent='Memuat ayat...';
+  document.getElementById('pa-prompt').textContent='Menyiapkan tantangan…';
+  document.getElementById('pa-clue').textContent='Memuat konten…';
   document.getElementById('pa-slot').innerHTML='';document.getElementById('pa-bank').innerHTML='';
   let pick;
-  try{pick=await pickAyat(g.juz,g.used,5+g.round*2)}catch(e){toast('Gagal memuat ayat. Cek koneksi.');exitJuz();return}
-  if(!pick){finishJuz();return}
-  g.words=pick.v.teksArab.trim().split(/\s+/);
-  g.placed=0;g.ref=`QS. ${pick.s.namaLatin}: ${pick.v.nomorAyat}`;
-  g.arti=pick.v.teksIndonesia;
-  g.bank=shuffle(g.words.map((w,i)=>({w,i,used:false})));
+  try{pick=await pickAyat(g.juz,g.used,Math.max(5,5+g.round*2));if(!pick)pick=await pickAyat(g.juz,g.used,50);if(!pick)throw new Error('Tidak ada ayat');if(g.selectedType==='continue'&&pick.v.nomorAyat>=pick.s.jumlahAyat){const prev=pick.s.ayat.find(v=>v.nomorAyat===pick.v.nomorAyat-1);if(prev)pick={s:pick.s,v:prev};}await buildQuestion(pick)}
+  catch(e){toast('Gagal memuat tantangan. Cek koneksi internet.');exitJuz();return}
   g.busy=false;
-  document.getElementById('pa-clue').textContent='“'+g.arti+'”';
-  renderPlay();
+  document.getElementById('pa-type').textContent=g.typeTitle||g.type||'🎲 Tantangan';
+  document.getElementById('pa-prompt').textContent=g.prompt||'';
+  document.getElementById('pa-clue').innerHTML=g.clue||'';
+  renderPlay();startRoundTimer();
 }
 function renderPlay(){
-  document.getElementById('pa-hearts').textContent='❤️'.repeat(g.hearts)+'🖤'.repeat(3-g.hearts);
-  document.getElementById('pa-round').textContent=`Ayat ${g.round+1} dari ${ROUNDS}`;
-  document.getElementById('pa-combo').textContent=g.combo>=3?`🔥 Combo x${g.combo}`:'';
-  document.getElementById('pa-bar').style.width=(g.round/ROUNDS*100)+'%';
-  document.getElementById('pa-slot').innerHTML=g.words.map((w,i)=>i<g.placed?`<span class="chip ok">${w}</span>`:'<span class="chip blank">___</span>').join('');
-  document.getElementById('pa-bank').innerHTML=g.bank.map((b,k)=>`<button class="chip" ${b.used?'disabled':''} onclick="tapWord(${k},this)">${b.w}</button>`).join('');
-}
-function tapWord(k,btn){
-  if(!g||g.busy)return;
-  const b=g.bank[k];
-  if(b.w===g.words[g.placed]){
-    b.used=true;g.placed++;g.combo++;
-    addXP(g.goal,2*(g.combo>=5?2:1),true);
-    renderPlay();updateGameStats();
-    if(g.placed===g.words.length)endRound();
+  if(!g)return;
+  document.getElementById('pa-hearts').textContent='❤️'.repeat(Math.max(g.hearts,0))+'🖤'.repeat(3-Math.max(g.hearts,0));
+  document.getElementById('pa-round').textContent=`Tantangan ${Math.min(g.round+1,ROUNDS)} dari ${ROUNDS} · ${g.correct||0} benar`;
+  document.getElementById('pa-combo').innerHTML=g.combo>=3?`<span class="game-streak">🔥 Combo x${g.combo}</span>`:'';
+  const progress=(g.round+(g.kind==='order'?(g.placed/Math.max(g.words?.length||1,1)):0))/ROUNDS*100;
+  document.getElementById('pa-bar').style.width=progress+'%';
+  if(g.kind==='order'){
+    document.getElementById('pa-slot').style.display='flex';
+    document.getElementById('pa-bank').className='bank';
+    document.getElementById('pa-slot').innerHTML=g.words.map((w,i)=>i<g.placed?`<span class="chip ok">${w}</span>`:'<span class="chip blank">___</span>').join('');
+    document.getElementById('pa-bank').innerHTML=g.bank.map((b,k)=>`<button class="chip" ${b.used?'disabled':''} onclick="tapWord(${k},this)">${b.w}</button>`).join('');
   }else{
-    g.hearts--;g.combo=0;
-    btn.classList.add('shake');
-    document.getElementById('pa-hearts').textContent='❤️'.repeat(Math.max(g.hearts,0))+'🖤'.repeat(3-Math.max(g.hearts,0));
-    if(g.hearts<=0)failJuz();
+    document.getElementById('pa-slot').style.display='none';
+    document.getElementById('pa-bank').className='bank mc-options';
+    document.getElementById('pa-bank').innerHTML=g.options.map((o,k)=>`<button class="mc-option" onclick="tapChoice(${k},this)">${o.text}</button>`).join('');
   }
 }
+function wrongAnswer(btn,message='Belum tepat! Coba lagi ya.'){
+  if(!g||g.busy)return;g.hearts--;g.combo=0;
+  if(btn){btn.classList.add('wrong');btn.disabled=true;}
+  document.getElementById('pa-hearts').textContent='❤️'.repeat(Math.max(g.hearts,0))+'🖤'.repeat(3-Math.max(g.hearts,0));
+  document.getElementById('pa-feedback').innerHTML=`<div class="feedback"><b class="game-feedback-bad">🙈 ${message}</b><br>Perhatikan petunjuknya dan coba pilihan lain.</div>`;
+  if(g.hearts<=0)failJuz();
+  else document.getElementById('companion-message').textContent='Belum apa-apa! Tarik napas, baca petunjuk, lalu coba lagi.';
+}
+function tapChoice(k,btn){
+  if(!g||g.busy)return;const opt=g.options[k];
+  if(opt.correct){
+    g.combo++;g.busy=true;clearGameTimers();
+    document.querySelectorAll('#pa-bank .mc-option').forEach((b,i)=>{b.disabled=true;if(g.options[i].correct)b.classList.add('correct')});
+    g.correct=(g.correct||0)+1;g.score=(g.score||0)+1;document.getElementById('companion-message').textContent=g.combo>=3?'Combo hebat! Nuri bangga, teruskan!':'Bagus! Satu langkah lagi menuju bintang.';const bonus=g.combo>=3?5:0;addXP(g.goal,(g.difficulty==='hard'?12:g.difficulty==='easy'?6:8)+bonus,true);
+    document.getElementById('pa-feedback').innerHTML=`<div class="feedback"><b class="game-feedback-good">✨ Tepat sekali! +${8+bonus} XP</b><br>${g.why||'Jawaban benar!'}<br><button class="btn" style="margin-top:10px" onclick="endRound()">Lanjut →</button></div>`;
+    updateGameStats();
+  }else wrongAnswer(btn);
+}
+function tapWord(k,btn){
+  if(!g||g.busy)return;const b=g.bank[k];
+  if(b.w===g.words[g.placed]){
+    b.used=true;g.placed++;g.combo++;addXP(g.goal,2*(g.combo>=5?2:1),true);renderPlay();updateGameStats();
+    if(g.placed===g.words.length)endRound();
+  }else wrongAnswer(btn,'Urutannya belum tepat.');
+}
 function endRound(){
-  g.busy=true;addXP(g.goal,10,true);
-  g.round++;
+  clearGameTimers();if(!g)return;
+  if(g.kind==='order'){g.correct=(g.correct||0)+1;g.score=(g.score||0)+1;document.getElementById('companion-message').textContent='Puzzle tersusun! Nuri memberi kamu semangat untuk ronde berikutnya.';}
+  const timeBonus=(g.mode==='rush'&&g.timeLeft>0)?5:0;
+  if(g.kind==='order')addXP(g.goal,10+timeBonus,true);else if(timeBonus)addXP(g.goal,timeBonus,true);
+  g.busy=true;g.round++;
   document.getElementById('pa-bar').style.width=(g.round/ROUNDS*100)+'%';
   const last=g.round>=ROUNDS;
-  document.getElementById('pa-feedback').innerHTML=`<div class="feedback"><b>Mantap! +10 XP ✨</b><br>${g.ref}<br><button class="btn" style="margin-top:10px" onclick="${last?'finishJuz()':'loadRound()'}">${last?'Selesai 🎉':'Ayat berikutnya →'}</button></div>`;
+  document.getElementById('pa-feedback').innerHTML=`<div class="feedback"><b class="game-feedback-good">🌟 Tantangan selesai! ${timeBonus?`Bonus kilat +${timeBonus} XP ⚡`:''}</b><br>${g.ref||''}<br><button class="btn" style="margin-top:10px" onclick="${last?'finishJuz()':'loadRound()'}">${last?'Lihat hasil 🎉':'Tantangan berikutnya →'}</button></div>`;
 }
 function finishJuz(){
+  clearGameTimers();
+  if(!g)return;
   const stars=Math.max(g.hearts,1);
   gs.stars[g.juz]=Math.max(gs.stars[g.juz]||0,stars);
   addXP(g.goal,20,true);saveGame();updateGameStats();confetti();
   document.getElementById('pa-slot').innerHTML='';document.getElementById('pa-bank').innerHTML='';
   document.getElementById('pa-clue').textContent='';
-  document.getElementById('pa-feedback').innerHTML=`<div class="feedback" style="text-align:center"><div style="font-size:40px">${'⭐'.repeat(stars)}</div><b>Juz ${g.juz} selesai! +20 XP bonus</b><br><button class="btn" style="margin-top:12px" onclick="exitJuz()">Kembali ke peta</button></div>`;
+  document.getElementById('pa-feedback').innerHTML=`<div class="feedback" style="text-align:center"><div style="font-size:40px">${'⭐'.repeat(stars)}</div><h2 style="margin:8px 0">Petualangan selesai!</h2><b>Juz ${g.juz} · ${g.correct||0} jawaban benar dari ${ROUNDS} ronde</b><p>Nuri mencatat progresmu. Terus latihan untuk membuka tantangan berikutnya!</p><button class="btn" style="margin:6px" onclick="startJuz(${g.juz})">Pilih game lain</button><button class="btn secondary" style="margin:6px" onclick="exitJuz()">Kembali ke peta</button></div>`;
 }
-function failJuz(){
+function failJuz(reason='Nyawa habis 💔'){
+  clearGameTimers();
+  if(!g)return;
   g.busy=true;
-  document.getElementById('pa-feedback').innerHTML=`<div class="feedback" style="text-align:center"><b>Nyawa habis 💔</b><br>Nggak apa-apa, coba lagi pelan-pelan.<br><button class="btn" style="margin:10px 6px 0" onclick="startJuz(${g.juz})">Coba lagi</button><button class="btn secondary" style="margin-top:10px" onclick="exitJuz()">Peta Juz</button></div>`;
+  document.getElementById('pa-feedback').innerHTML=`<div class="feedback" style="text-align:center"><b>${reason}</b><br>Nggak apa-apa, coba lagi pelan-pelan. Setiap percobaan adalah latihan.<br><button class="btn" style="margin:10px 6px 0" onclick="startJuz(${g.juz})">Coba lagi</button><button class="btn secondary" style="margin-top:10px" onclick="exitJuz()">Peta Juz</button></div>`;
 }
 function confetti(){
   const em=['🎉','✨','🌿','⭐','☾'];
@@ -1116,11 +1474,41 @@ function fastPrefsNow(){
   const def=[true,true,false,false,false,false,false,false];
   try{return JSON.parse(localStorage.getItem('quractiveFastPrefs')||'null')||def}catch(e){return def}
 }
+function daudStart(){
+  try{return localStorage.getItem('quractiveDaudStart')||''}catch(e){return ''}
+}
+function isDaudDay(date){
+  const s=daudStart();if(!s)return false;
+  const [y,m,d]=s.split('-').map(Number);
+  const a=Date.UTC(y,m-1,d),b=Date.UTC(date.getFullYear(),date.getMonth(),date.getDate());
+  const diff=Math.round((b-a)/86400000);
+  return diff>=0&&diff%2===0;
+}
+function openDaudModal(){
+  const t=new Date(),pad=n=>String(n).padStart(2,'0');
+  document.getElementById('daud-date').value=daudStart()||`${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}`;
+  document.getElementById('daud-modal').classList.add('show');
+}
+function cancelDaud(){
+  document.getElementById('daud-modal').classList.remove('show');
+  if(!daudStart())document.querySelectorAll('#fast-list input')[5].checked=false;
+}
+function confirmDaud(){
+  const v=document.getElementById('daud-date').value;
+  if(!v){toast('Pilih tanggal mulai dulu ya.');return}
+  try{localStorage.setItem('quractiveDaudStart',v)}catch(e){}
+  document.getElementById('daud-modal').classList.remove('show');
+  toast('Puasa Daud dimulai dari tanggal yang kamu pilih. Jangan lupa tekan Simpan pilihan puasa.');
+}
+document.querySelectorAll('#fast-list input')[5].addEventListener('change',e=>{
+  if(e.target.checked)openDaudModal();
+});
 function sunnahToday(date){
   const p=fastPrefsNow(),h=hNum(date),w=date.getDay();
   if(h.m===9)return null;
   if(h.m===10&&h.d===1)return null;
   if(h.m===12&&h.d>=10&&h.d<=13)return null;
+  if(p[5]&&isDaudDay(date))return 'Puasa Daud';
   if(p[0]&&(w===1||w===4))return 'Senin/Kamis';
   if(p[1]&&h.d>=13&&h.d<=15)return 'Ayyamul Bidh';
   if(p[2]&&h.m===10&&h.d>=2)return 'Puasa Syawal';
@@ -1208,13 +1596,14 @@ function renderCalendar(){
       currentRange.end=d;
     }
 
-    const marked=[5,12,19,26].includes(d);
+    const fast=sunnahToday(date);
+    const marked=!!fast;  
     const isToday=calYear===_now.getFullYear()&&calMonth===_now.getMonth()&&d===_now.getDate();
     html+=`<div class="day ${marked?'marked':''} ${isToday?'today':''}">
       <span class="gregorian-day">${d}</span>
       <span class="hijri">${h.day} ${h.month}</span>
       <span class="hijri-year">${h.year} H</span>
-      ${marked?'<span class="sunnah-mark">• Sunnah</span>':''}
+      ${fast?`<span class="sunnah-mark">• ${fast}</span>`:''}
     </div>`;
   }
   grid.innerHTML=html;
@@ -1242,6 +1631,7 @@ function loadFastPrefs(){
 function saveFastPrefs(){
   const values=[...document.querySelectorAll('#fast-list input')].map(el=>el.checked);
   try{localStorage.setItem('quractiveFastPrefs',JSON.stringify(values))}catch(e){}
+  renderCalendar();
   toast(`${values.filter(Boolean).length} pilihan puasa tersimpan di browser ini.`);
 }
 function toggle(el){
@@ -1256,12 +1646,91 @@ function toggleFriday(el){
   document.getElementById('friday-desc').textContent=on?'Fitur siap menampilkan rekomendasi masjid setelah integrasi lokasi.':'Aktifkan toggle untuk melihat simulasi status fitur.';
   if(on)toast('Simulasi aktif. Kamu bisa cek masjid terdekat di bawah.');
 }
-function saveReminder(){
+/* ===== NOTIFIKASI PENGINGAT ===== */
+function notifSupported(){return 'Notification' in window}
+function updateNotifStatus(){
+  const el=document.getElementById('notif-status');if(!el)return;
+  if(!notifSupported()){el.textContent='Browser ini belum mendukung notifikasi.';return}
+  const p=Notification.permission;
+  el.textContent=p==='granted'?'Notifikasi aktif. Muncul selama Quractive terbuka di browser.':p==='denied'?'Notifikasi diblokir. Izinkan lewat ikon gembok di address bar.':'Notifikasi belum diizinkan. Tekan Simpan pengaturan untuk mengizinkan.';
+}
+async function askNotifPermission(){
+  if(!notifSupported())return false;
+  if(Notification.permission==='default'){try{await Notification.requestPermission()}catch(e){}}
+  updateNotifStatus();
+  return Notification.permission==='granted';
+}
+async function showNotif(title,body,tag){
+  if(!notifSupported()||Notification.permission!=='granted')return false;
+  const opts={body,icon:'icon-512.png',badge:'icon-512.png',tag:tag||'quractive'};
+  try{
+    const reg='serviceWorker' in navigator?await navigator.serviceWorker.getRegistration():null;
+    if(reg&&reg.active){await reg.showNotification(title,opts);return true}
+  }catch(e){}
+  try{new Notification(title,opts);return true}catch(e){return false}
+}
+function reminderMinutes(){
+  let t='20:00';
+  try{t=(localStorage.getItem('quractiveReminderTime')||'20:00').replace('.',':')}catch(e){}
+  const m=t.match(/^(\d{1,2}):(\d{2})$/);
+  return m?(+m[1])*60+(+m[2]):20*60;
+}
+function toggleOn(label){
+  const el=document.querySelector('[aria-label="'+label+'"]');
+  return !!el&&el.classList.contains('on');
+}
+function firedToday(key){try{return localStorage.getItem('quractiveNotif:'+key)===todayKey()}catch(e){return false}}
+function markFired(key){try{localStorage.setItem('quractiveNotif:'+key,todayKey())}catch(e){}}
+
+function checkReminders(){
+  if(!notifSupported()||Notification.permission!=='granted')return;
+  const now=new Date(),nowMin=now.getHours()*60+now.getMinutes();
+  const t=reminderMinutes();
+  const due=nowMin>=t&&nowMin-t<=180;   // muncul di jam pilihan, atau sampai 3 jam setelahnya kalau app baru dibuka
+
+  // 1) Puasa sunnah (sesuai "Pengingat puasa": 2 hari / 1 hari sebelumnya / hari H)
+  if(due&&toggleOn('Toggle pengingat puasa')&&!firedToday('fast')){
+    const offset=Number(localStorage.getItem('quractiveReminderDay')||1);
+    const target=new Date(now.getFullYear(),now.getMonth(),now.getDate()+offset,12);
+    const fast=sunnahToday(target);
+    if(fast){
+      const kapan=offset===0?'Hari ini':offset===1?'Besok':'Lusa';
+      showNotif('Pengingat puasa sunnah 🌙',kapan+' jadwal '+fast+'. Niatkan dari sekarang ya.','fast');
+    }
+    markFired('fast');
+  }
+  // 2) Daily Qur'an
+  if(due&&toggleOn('Toggle pengingat Quran')&&!firedToday('quran')){
+    showNotif("Waktunya Qur'an 📖",'Luangkan beberapa menit untuk membaca atau murajaah hari ini.','quran');
+    markFired('quran');
+  }
+  // 3) Salat Jumat (jam tetap 10.30, bukan jam pilihan)
+  if(now.getDay()===5&&nowMin>=630&&nowMin<=690&&toggleOn('Toggle pengingat Jumat')&&!firedToday('jumat')){
+    showNotif('Salat Jumat 🕌','Bersiap ke masjid. Buka Quractive untuk mencari masjid terdekat.','jumat');
+    markFired('jumat');
+  }
+}
+let reminderTimer=null;
+function startReminderLoop(){
+  if(reminderTimer)clearInterval(reminderTimer);
+  checkReminders();
+  reminderTimer=setInterval(checkReminders,30000);
+}
+async function testNotif(){
+  const ok=await askNotifPermission();
+  if(!ok){toast('Izinkan notifikasi dulu di browser ya.');return}
+  await showNotif('Quractive 🌿','Berhasil! Pengingatmu akan muncul seperti ini.','test');
+}
+async function saveReminder(){
+  const time=document.getElementById('reminder-time').value||'20:00';
   try{
     localStorage.setItem('quractiveReminderDay',document.getElementById('reminder-day').value);
-    localStorage.setItem('quractiveReminderTime',document.getElementById('reminder-time').value);
+    localStorage.setItem('quractiveReminderTime',time);
+    ['fast','quran','jumat'].forEach(k=>localStorage.removeItem('quractiveNotif:'+k));
   }catch(e){}
-  toast('Preferensi pengingat tersimpan di browser ini.');
+  const ok=await askNotifPermission();
+  toast(ok?'Pengingat tersimpan. Notifikasi muncul jam '+time+'.':'Tersimpan, tapi notifikasi belum diizinkan browser.');
+  checkReminders();
 }
 function loadSavedState(){
   try{
@@ -1278,7 +1747,7 @@ function loadSavedState(){
     const day=localStorage.getItem('quractiveReminderDay');
     if(day!==null)document.getElementById('reminder-day').value=day;
     const time=localStorage.getItem('quractiveReminderTime');
-    if(time)document.getElementById('reminder-time').value=time;
+    if(time)document.getElementById('reminder-time').value=time.replace('.',':');
     const friday=localStorage.getItem('quractiveFriday')==='1';
     const ft=document.querySelector('[aria-label="Toggle pengingat Jumat"]');
     if(ft){
@@ -1309,8 +1778,7 @@ document.querySelectorAll('.view').forEach(v=>{
   b.onclick=()=>showView('dashboard');
   v.prepend(b);
 });
-renderJuzMap();renderCalendar();loadFastPrefs();loadSavedState();updateGameStats();
-</script>
+renderJuzMap();renderCalendar();loadFastPrefs();loadSavedState();updateGameStats();updateNotifStatus();startReminderLoop();</script>
 
 <script>
 if ("serviceWorker" in navigator) {
