@@ -869,6 +869,8 @@ async function aktifkanNotifikasi() {
 window.aktifkanNotifikasi = aktifkanNotifikasi;
 window.quractiveAuth = auth;
 window.quractiveDb = db;
+window.quractiveSetDoc = setDoc;
+window.quractiveDoc = doc;
   
 function enterApp() {
   document.body.classList.add("logged-in");
@@ -1836,8 +1838,8 @@ async function saveReminder() {
   }
 
   try {
-    await setDoc(
-      doc(window.quractiveDb, 'users', user.uid),
+    await window.quractiveSetDoc(
+      window.quractiveDoc(window.quractiveDb, 'users', user.uid),
       {
         reminderDay: day,
         reminderTime: time,
