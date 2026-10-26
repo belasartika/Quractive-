@@ -1803,16 +1803,54 @@ async function testNotif(){
   if(!ok){toast('Izinkan notifikasi dulu di browser ya.');return}
   await showNotif('Quractive 🌿','Berhasil! Pengingatmu akan muncul seperti ini.','test');
 }
-async function saveReminder(){
-  const time=document.getElementById('reminder-time').value||'20:00';
-  try{
-    localStorage.setItem('quractiveReminderDay',document.getElementById('reminder-day').value);
-    localStorage.setItem('quractiveReminderTime',time);
-    ['fast','quran','jumat'].forEach(k=>localStorage.removeItem('quractiveNotif:'+k));
-  }catch(e){}
-  const ok=await askNotifPermission();
-  toast(ok?'Pengingat tersimpan. Notifikasi muncul jam '+time+'.':'Tersimpan, tapi notifikasi belum diizinkan browser.');
-  checkReminders();
+
+async function saveReminder() {
+  const time = document.getElementById('reminder-time').value || '20:00';
+  const day = document.getElementById('reminder-day').value;
+
+  try {
+    localStorage.setItem('quractiveReminderDay', day);
+    localStorage.setItem('quractiveReminderTime', time);
+
+    ['fast', 'quran', 'jumat'].forEach(k => {
+      localStorage.removeItem('quractiveNotif:' + k);
+    });
+  } catch (e) {
+    console.error('Gagal menyimpan pengaturan lokal:', e);
+  }
+
+  const ok = await askNotifPermission();
+
+  if (!ok) {
+    toast('Jadwal tersimpan di perangkat, tetapi izin notifikasi belum aktif.');
+    return;
+  }
+
+  const user = auth.currentUser;
+
+  if (!user) {
+    toast('Silakan login terlebih dahulu.');
+    return;
+  }
+
+  try {
+    await setDoc(
+      doc(db, 'users', user.uid),
+      {
+        reminderDay: day,
+        reminderTime: time,
+        reminderTimezone: 'Asia/Jakarta',
+        updatedAt: new Date().toISOString()
+      },
+      { merge: true }
+    );
+
+    toast('Jadwal pengingat berhasil disimpan.');
+    checkReminders();
+  } catch (error) {
+    console.error('Gagal menyimpan jadwal ke Firestore:', error);
+    toast('Jadwal gagal disimpan ke server. Periksa Console.');
+  }
 }
 function loadSavedState(){
   try{
