@@ -469,6 +469,281 @@ body.logged-in .shell{display:none}
 .verse.playing{background:color-mix(in srgb,var(--gold) 18%,transparent);border-radius:12px;padding-left:10px;padding-right:10px}
 .verse-meta{align-items:center}
 
+
+
+/* ===== PERBAIKAN KONTRAS DARK MODE ===== */
+body.dark .app { color: var(--text); }
+body.dark .topbar,
+body.dark .nav,
+body.dark .card,
+body.dark .stat,
+body.dark .date-chip,
+body.dark .surah-list,
+body.dark .surah-btn,
+body.dark .day,
+body.dark .fast-row,
+body.dark .modal-box,
+body.dark .profile-menu,
+body.dark .float-card,
+body.dark .goal-option,
+body.dark .menu-tile,
+body.dark .juz-tile,
+body.dark .answer,
+body.dark .mc-option,
+body.dark .quest-card,
+body.dark .quest-bottom,
+body.dark .game-mode,
+body.dark .app .field input,
+body.dark .app .field select,
+body.dark .app .field textarea,
+body.dark .audio-bar select {
+  background-color: var(--card);
+  color: var(--text);
+  border-color: var(--line);
+}
+body.dark .nav button { color: #E4D8C8; }
+body.dark .nav button.active,
+body.dark .nav button:hover,
+body.dark .surah-btn.active,
+body.dark .goal-option.selected,
+body.dark .game-mode.active {
+  background: var(--soft);
+  color: #F7F0E5;
+}
+body.dark .arabic,
+body.dark .translation,
+body.dark .verse .arabic,
+body.dark .quest-hero p,
+body.dark .select-head p,
+body.dark .companion-line,
+body.dark .game-mission,
+body.dark .notice,
+body.dark .feedback {
+  color: #F1E8DA;
+}
+body.dark .surah-btn small,
+body.dark .day .hijri,
+body.dark .day .hijri-year,
+body.dark .muted,
+body.dark .lead,
+body.dark .card p,
+body.dark .modal-box p,
+body.dark .setting-row p,
+body.dark .fast-row small,
+body.dark .quest-card small,
+body.dark .game-mode small,
+body.dark .audio-bar .audio-status {
+  color: #CFC0AC;
+}
+body.dark .pm-item,
+body.dark .pm-head b,
+body.dark .pm-head small,
+body.dark .profile-head,
+body.dark .profile-head span,
+body.dark .app .field label,
+body.dark .section-head p,
+body.dark .streak-day,
+body.dark .day-name {
+  color: var(--text);
+}
+body.dark .profile-menu { background: var(--card); }
+body.dark .profile { background: var(--soft); color: var(--text); }
+body.dark .app .field input[readonly] { background: var(--soft); color: #CFC0AC; }
+body.dark .game-mission,
+body.dark .game-type-pill,
+body.dark .quest-hero,
+body.dark .companion-line,
+body.dark .notice,
+body.dark .feedback {
+  background: var(--soft);
+  border-color: var(--line);
+}
+body.dark .game-mission,
+body.dark .game-type-pill { color: #F1E8DA; }
+body.dark .answer.correct,
+body.dark .mc-option.correct { background: #244B3B; color: #D9F5E6; }
+body.dark .answer.wrong,
+body.dark .mc-option.wrong { background: #512E2B; color: #FFE1DC; }
+body.dark .day.today { background: #806348; color: #FFFFFF; }
+body.dark .day.today .hijri { color: #F7F0E5; }
+body.dark .welcome p { color: #F1E8DA; }
+body.dark .btn.secondary,
+body.dark .google { background: var(--soft); color: var(--text); }
+
+
+/* ===== FIX KONTRAS DARK MODE: SOAL & GAME HAFIZ QUEST ===== */
+body.dark .game-question {
+  background: linear-gradient(140deg, #3b3026, #44372b);
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+
+body.dark .game-question,
+body.dark .game-question p,
+body.dark .game-question small,
+body.dark .game-prompt,
+body.dark .game-arabic,
+body.dark .game-question .arabic {
+  color: #F7F0E5;
+}
+
+body.dark .game-arabic,
+body.dark .game-question .arabic {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+}
+
+body.dark .slot .chip,
+body.dark .bank .chip,
+body.dark .chip {
+  background: #3B3026;
+  color: #F7F0E5;
+  border-color: #6A5745;
+}
+
+body.dark .chip.blank {
+  background: #2D241D;
+  color: transparent;
+  border-color: #6A5745;
+}
+
+body.dark .chip.ok {
+  background: #244B3B;
+  color: #D9F5E6;
+  border-color: #4D9876;
+}
+
+body.dark .chip.hint-target {
+  background: #5A4822 !important;
+  color: #FFF1C2 !important;
+  border-color: #D6A92D !important;
+}
+
+body.dark .game-type-pill {
+  background: #44372B;
+  color: #F7F0E5;
+  border: 1px solid var(--line);
+}
+
+body.dark .game-mission {
+  background: #3B3026;
+  color: #F1E8DA;
+  border-color: var(--line);
+}
+
+body.dark .game-prompt {
+  color: #F7F0E5;
+}
+
+body.dark .mc-option {
+  background: #332920;
+  color: #F7F0E5;
+  border-color: #514337;
+}
+
+body.dark .mc-option:hover {
+  background: #44372B;
+  color: #FFFFFF;
+}
+
+body.dark .mc-option.correct {
+  background: #244B3B;
+  color: #D9F5E6;
+  border-color: #4D9876;
+}
+
+body.dark .mc-option.wrong {
+  background: #512E2B;
+  color: #FFE1DC;
+  border-color: #A85D55;
+}
+
+body.dark .answer {
+  background: #332920;
+  color: #F7F0E5;
+  border-color: #514337;
+}
+
+body.dark .answer.correct {
+  background: #244B3B;
+  color: #D9F5E6;
+  border-color: #4D9876;
+}
+
+body.dark .answer.wrong {
+  background: #512E2B;
+  color: #FFE1DC;
+  border-color: #A85D55;
+}
+
+body.dark .feedback {
+  background: #3B3026;
+  color: #F1E8DA;
+  border: 1px solid var(--line);
+}
+
+body.dark .game-feedback-good {
+  color: #9BE0B9;
+}
+
+body.dark .game-feedback-bad {
+  color: #FFAAA0;
+}
+
+body.dark .companion-line {
+  background: #3B3026;
+  color: #F1E8DA;
+  border: 1px solid var(--line);
+}
+
+body.dark .quest-hero {
+  background: linear-gradient(120deg, #332920, #44372B);
+  border-color: var(--line);
+}
+
+body.dark .quest-hero h2,
+body.dark .select-head h2 {
+  color: #F7F0E5;
+}
+
+body.dark .quest-hero p,
+body.dark .select-head p {
+  color: #CFC0AC;
+}
+
+body.dark .quest-mascot {
+  background: linear-gradient(145deg, #44372B, #5A4936);
+  box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.15);
+}
+
+</style>
+<style>
+
+/* ===== PERBAIKAN STREAK SAAT DARK MODE ===== */
+body.dark .streak-card {
+  background: linear-gradient(120deg, #3b3024, #30291f);
+  border-color: #665236;
+  color: #F5EBDD;
+}
+body.dark .streak-info b {
+  color: #F5EBDD;
+}
+body.dark .streak-info span,
+body.dark .streak-day {
+  color: #D8CBB8;
+}
+body.dark .streak-day i {
+  background: #28231e;
+  border-color: #665d50;
+  color: #F5EBDD;
+}
+body.dark .streak-day.on i {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #241b10;
+}
+body.dark .streak-day.today i {
+  border-color: #9fc8a8;
+}
 </style>
 </head>
 
@@ -694,16 +969,6 @@ body.logged-in .shell{display:none}
     <div class="quest-hero card">
       <div class="quest-mascot" id="quest-mascot">🦉</div>
       <div class="quest-hero-copy"><span class="game-type-pill">🌙 PETUALANGAN BARU</span><h2 id="select-title">Pilih misi Juz 1</h2><p id="mascot-line">Hai, teman Quractive! Pilih tantangan yang ingin kamu taklukkan. Aku temani sampai garis akhir!</p></div>
-      <div style="margin:16px 0;padding:14px;border:1px dashed var(--line);border-radius:12px;">
-        <label for="tajwidExcel"><b>📥 Impor Bank Soal Tajwid</b></label>
-        <p class="muted">Pilih file Excel berisi 30 soal Tajwid.</p>
-        <input
-          type="file"
-          id="tajwidExcel"
-          accept=".xlsx,.xls"
-          onchange="importTajwidExcel(this)"
-        >
-      </div>
     </div>
     <div class="select-head"><div><h2>Pilih jenis permainan</h2><p class="muted">Setiap juz punya beberapa jalur latihan. Pilih satu atau acak semuanya!</p></div><button class="btn secondary small" onclick="backToJuzMap()">← Peta Juz</button></div>
     <div class="quest-grid" id="quest-grid"></div>
@@ -1057,7 +1322,6 @@ window.logout = async function () {
 };
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <!-- ================= SCRIPT 2: APLIKASI ================= -->
 <script>
 
@@ -1566,107 +1830,21 @@ function juzRange(j){
   if(j<30){const [nS,nA]=JUZ_START[j];if(nA===1)eS=nS-1;else{eS=nS;eA=nA-1}}else eS=114;
   return {sS,sA,eS,eA};
 }
-
-async function pickAyat(j,used,maxWords,avoidRecent=true){
+async function pickAyat(j,used,maxWords){
   const r=juzRange(j);
-  const history=new Set(getGameHistory());
-
   for(let t=0;t<25;t++){
-    const sn=r.sS+Math.floor(
-      Math.random()*(r.eS-r.sS+1)
-    );
-
+    const sn=r.sS+Math.floor(Math.random()*(r.eS-r.sS+1));
     const s=await getSurah(sn);
-
-    const from=sn===r.sS?r.sA:1;
-    const to=(sn===r.eS&&r.eA)
-      ?r.eA:s.jumlahAyat;
-
+    const from=sn===r.sS?r.sA:1,to=(sn===r.eS&&r.eA)?r.eA:s.jumlahAyat;
     const c=s.ayat.filter(v=>{
-      const key=sn+':'+v.nomorAyat;
       const n=v.teksArab.trim().split(/\s+/).length;
-
-      return v.nomorAyat>=from &&
-        v.nomorAyat<=to &&
-        n>=3 &&
-        n<=maxWords &&
-        !used.has(key) &&
-        (!avoidRecent || !history.has('ayat|'+key));
+      return v.nomorAyat>=from&&v.nomorAyat<=to&&n>=3&&n<=maxWords&&!used.has(sn+':'+v.nomorAyat);
     });
-
-    if(c.length){
-      const v=c[Math.floor(Math.random()*c.length)];
-      const key=sn+':'+v.nomorAyat;
-
-      used.add(key);
-      rememberGameItem('ayat|'+key);
-
-      return {s,v};
-    }
+    if(c.length){const v=c[Math.floor(Math.random()*c.length)];used.add(sn+':'+v.nomorAyat);return {s,v}}
   }
-
-  // Jika soal baru sudah habis, izinkan pengulangan
-  if(avoidRecent){
-    return pickAyat(j,used,maxWords,false);
-  }
-
   return null;
 }
-
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const k=Math.floor(Math.random()*(i+1));[a[i],a[k]]=[a[k],a[i]]}return a}
-
-// ===== SISTEM ANTI-REPEAT HAFIZ QUEST =====
-const GAME_HISTORY_KEY = 'quractiveQuestionHistory';
-
-function getGameHistory(){
-  try {
-    return JSON.parse(
-      localStorage.getItem(GAME_HISTORY_KEY) || '[]'
-    );
-  } catch(e) {
-    return [];
-  }
-}
-
-function rememberGameItem(id){
-  let history = getGameHistory();
-
-  history = history.filter(item => item !== id);
-  history.push(id);
-
-  // Simpan maksimal 100 soal terakhir
-  history = history.slice(-100);
-
-  try {
-    localStorage.setItem(
-      GAME_HISTORY_KEY,
-      JSON.stringify(history)
-    );
-  } catch(e) {}
-}
-
-function pickFreshItem(pool, category, getId){
-  if(!pool.length) return null;
-
-  const history = new Set(getGameHistory());
-
-  const fresh = pool.filter(item =>
-    !history.has(category + '|' + getId(item))
-  );
-
-  // Utamakan soal yang belum pernah muncul
-  const available = fresh.length ? fresh : pool;
-
-  const selected = available[
-    Math.floor(Math.random() * available.length)
-  ];
-
-  rememberGameItem(
-    category + '|' + getId(selected)
-  );
-
-  return selected;
-}
 
 let selectedJuzForGame=1;
 const QUEST_TYPES=[
@@ -1691,7 +1869,7 @@ function backToJuzMap(){clearGameTimers();g=null;document.getElementById('game-s
 async function launchGameType(type){
   await loadSurahList();clearGameTimers();
   const difficulty=document.getElementById('difficulty-select').value;
-  g={juz:selectedJuzForGame,round:0,hearts:3,combo:0,used:new Set(),typeBag:shuffle([0,1,2,3,4,5]),busy:false,mode:selectedGameMode,selectedType:type,difficulty,score:0,correct:0};
+  g={juz:selectedJuzForGame,round:0,hearts:3,combo:0,used:new Set(),busy:false,mode:selectedGameMode,selectedType:type,difficulty,score:0,correct:0};
   g.goal=gs.stars[g.juz]?'murajaah':'hafal';
   if(!chosenGoals.has(g.goal))toast('Goal "'+goalNames[g.goal][0]+'" belum dipilih, XP tidak bertambah di sesi ini.');
   document.getElementById('game-select-wrap').classList.add('hidden');
@@ -1700,7 +1878,7 @@ async function launchGameType(type){
   document.getElementById('pa-feedback').innerHTML='';
   loadRound();
 }
-let TAJWID_QUIZ=[
+const TAJWID_QUIZ=[
  {q:'Apa hukum nun sukun atau tanwin bertemu huruf ب?',opts:['Iqlab','Idgham bighunnah','Izhar halqi','Ikhfa haqiqi'],a:0,why:'Iqlab terjadi ketika nun sukun atau tanwin bertemu huruf ba (ب).'},
  {q:'Berapa jumlah huruf izhar halqi?',opts:['4 huruf','5 huruf','6 huruf','7 huruf'],a:2,why:'Huruf izhar halqi ada enam: ء ه ع ح غ خ.'},
  {q:'Mim sukun bertemu mim (م) dibaca dengan hukum apa?',opts:['Ikhfa syafawi','Idgham mimi','Izhar halqi','Iqlab'],a:1,why:'Mim sukun bertemu mim disebut idgham mimi atau idgham mitslain.'},
@@ -1710,80 +1888,6 @@ let TAJWID_QUIZ=[
  {q:'Nun sukun bertemu ل atau ر hukumnya…',opts:['Idgham bighunnah','Idgham bilaghunnah','Ikhfa syafawi','Izhar'],a:1,why:'Lam dan ra termasuk huruf idgham bilaghunnah, tanpa dengung.'},
  {q:'Mim sukun bertemu ب disebut…',opts:['Iqlab','Ikhfa syafawi','Idgham mimi','Mad wajib'],a:1,why:'Ikhfa syafawi terjadi ketika mim sukun bertemu ba.'}
 ];
-function importTajwidExcel(input) {
-  const file = input.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = function(e) {
-    try {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
-      const sheet = workbook.Sheets['Bank Soal Tajwid'];
-
-      if (!sheet) {
-        alert('Sheet Bank Soal Tajwid tidak ditemukan!');
-        return;
-      }
-
-      const rows = XLSX.utils.sheet_to_json(sheet, {
-        header: 1,
-        defval: ''
-      });
-
-      const questions = rows.slice(1)
-        .filter(row => row[1] && row[2] && row[3] && row[4] && row[5])
-        .map(row => ({
-          q: String(row[1]).trim(),
-          opts: [
-            String(row[2]).trim(),
-            String(row[3]).trim(),
-            String(row[4]).trim(),
-            String(row[5]).trim()
-          ],
-          a: ['A', 'B', 'C', 'D'].indexOf(
-            String(row[6]).trim().toUpperCase()
-          ),
-          why: String(row[7] || '').trim()
-        }))
-        .filter(q => q.a >= 0);
-
-      if (questions.length === 0) {
-        alert('Tidak ada soal valid yang ditemukan!');
-        return;
-      }
-
-      TAJWID_QUIZ = questions;
-
-      localStorage.setItem(
-        'quractive_tajwid_bank',
-        JSON.stringify(questions)
-      );
-
-      alert('Berhasil mengimpor ' + questions.length + ' soal Tajwid!');
-    } catch (error) {
-      alert('Gagal membaca file Excel. Periksa format file!');
-      console.error(error);
-    }
-
-    input.value = '';
-  };
-
-  reader.readAsArrayBuffer(file);
-}
-
-function restoreTajwidBank() {
-  const saved = localStorage.getItem('quractive_tajwid_bank');
-
-  if (saved) {
-    try {
-      TAJWID_QUIZ = JSON.parse(saved);
-    } catch (error) {
-      console.error('Bank soal tidak bisa dipulihkan:', error);
-    }
-  }
-}
 const SURAH_QUIZ=[
  {q:'Surah apakah yang dikenal sebagai Ummul Kitab dan dibaca pada setiap rakaat salat?',opts:['Al-Baqarah','Al-Fatihah','Al-Ikhlas','An-Nas'],a:1,why:'Al-Fatihah dikenal sebagai Ummul Kitab.'},
  {q:'Surah terpanjang dalam Al-Qur’an adalah…',opts:['Ali Imran','An-Nisa','Al-Baqarah','Al-Maidah'],a:2,why:'Al-Baqarah adalah surah terpanjang dalam Al-Qur’an.'},
@@ -1797,17 +1901,9 @@ function mcQuestion(type,title,prompt,options,answer,why,extra=''){
 }
 async function buildQuestion(pick){
   const typeRoll={order:0,continue:1,surah:2,meaning:3,facts:4,tajwid:5};
- let roll;
-
-if(g.selectedType==='mixed'){
-  if(!g.typeBag || g.typeBag.length===0){
-    g.typeBag=shuffle([0,1,2,3,4,5]);
-  }
-
-  roll=g.typeBag.pop();
-}else{
-  roll=typeRoll[g.selectedType];
-}
+  let roll=g.selectedType==='mixed'?Math.floor(Math.random()*6):typeRoll[g.selectedType];
+  if(g.difficulty==='easy' && g.selectedType==='mixed' && Math.random()<.25) roll=0;
+  if(g.difficulty==='hard' && g.selectedType==='mixed' && Math.random()<.35) roll=5;
   // Variasi tipe soal: susun ayat, lanjutkan ayat, tebak surah, arti ayat, dan tajwid.
   if(roll===0){
     g.kind='order';g.type='🧩 Susun potongan ayat';g.typeTitle='🧩 Susun Ayat';
@@ -1837,11 +1933,11 @@ if(g.selectedType==='mixed'){
     g.clue=`<div class="game-arabic">${pick.v.teksArab}</div><small>QS. ${pick.s.namaLatin} · ayat ${pick.v.nomorAyat}</small>`;g.ref=`QS. ${pick.s.namaLatin}: ${pick.v.nomorAyat}`;return;
   }
   if(roll===4){
-    const sq=pickFreshItem(SURAH_QUIZ,'surah',q=>q.q);
+    const sq=SURAH_QUIZ[Math.floor(Math.random()*SURAH_QUIZ.length)];
     mcQuestion('surah-facts','📖 Pengetahuan Surah',sq.q,sq.opts,sq.a,sq.why);
     g.clue='Uji pengetahuanmu tentang nama dan fakta surah dalam Al-Qur’an.';g.ref='Pengetahuan Surah';return;
   }
-  const tq=pickFreshItem(TAJWID_QUIZ,'tajwid',q=>q.q);
+  const tq=TAJWID_QUIZ[Math.floor(Math.random()*TAJWID_QUIZ.length)];
   mcQuestion('tajwid','🔎 Tantangan Tajwid',tq.q,tq.opts,tq.a,tq.why);
   g.clue='Pilih jawaban yang paling tepat. Setelah menjawab, baca penjelasannya.';g.ref='Kuis Tajwid';
 }
@@ -2294,7 +2390,7 @@ document.querySelectorAll('.view').forEach(v=>{
   b.onclick=()=>showView('dashboard');
   v.prepend(b);
 });
-restoreTajwidBank();renderJuzMap();renderCalendar();loadFastPrefs();loadSavedState();updateGameStats();updateNotifStatus();startReminderLoop();</script>
+renderJuzMap();renderCalendar();loadFastPrefs();loadSavedState();updateGameStats();updateNotifStatus();startReminderLoop();</script>
 
 <script>
 if ("serviceWorker" in navigator) {
