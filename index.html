@@ -263,6 +263,8 @@ body.logged-in .shell{display:none}
 .surah-btn small{color:var(--muted);white-space:nowrap}
 .verse{padding:22px 0;border-bottom:1px solid var(--line)}
 .arabic{font-family:"Amiri","Times New Roman",serif;font-size:30px;line-height:2;text-align:right;color:#173f43;margin-bottom:12px}
+.verse .arabic {cursor: pointer;transition: opacity .2s;}
+.verse .arabic:hover {opacity: .75;}
 .translation{font-size:13px;line-height:1.7;color:#536568}
 .verse-meta{font-size:11px;color:var(--muted);margin-bottom:9px;display:flex;justify-content:space-between}
 #reader-body{max-height:75vh;overflow:auto;padding-right:6px}
@@ -458,6 +460,15 @@ body.logged-in .shell{display:none}
 .streak-day.today i{border-color:var(--green)}
 @media(max-width:600px){.streak-card{flex-wrap:wrap}.streak-week{margin-left:0;width:100%;justify-content:space-between}}
 
+/* ===== AUDIO QUR'AN ===== */
+.audio-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px;margin-bottom:12px;border:1px solid var(--line);border-radius:14px;background:var(--mint)}
+.audio-bar select{flex:1;min-width:170px;border:1px solid var(--line);border-radius:10px;padding:9px;background:var(--field);color:var(--ink);font-size:12px}
+.audio-bar .audio-status{font-size:11px;color:var(--muted);flex-basis:100%}
+.play-btn{border:1px solid var(--line);background:var(--card);color:var(--green);border-radius:50%;width:32px;height:32px;font-size:13px;line-height:1}
+.play-btn:hover{border-color:var(--green)}
+.verse.playing{background:color-mix(in srgb,var(--gold) 18%,transparent);border-radius:12px;padding-left:10px;padding-right:10px}
+.verse-meta{align-items:center}
+
 </style>
 </head>
 
@@ -641,6 +652,20 @@ body.logged-in .shell{display:none}
       <div class="card-title">
         <h3 id="reader-title">Pilih surah atau juz</h3>
         <button class="btn secondary small" onclick="saveBookmark()">🔖 Bookmark</button>
+      </div>
+      <div class="audio-bar">
+        <button class="btn small" id="btn-play-all" onclick="togglePlayAll()">
+          ▶ Putar semua
+        </button>
+        <button class="btn secondary small" onclick="stopAudio()">■ Stop</button>
+        <select id="qari-select" onchange="changeQari()" aria-label="Pilih qari">
+          <option value="05">Misyari Rasyid Al-Afasi</option>
+          <option value="03">Abdurrahman As-Sudais</option>
+          <option value="04">Ibrahim Al-Dossari</option>
+          <option value="01">Abdullah Al-Juhany</option>
+          <option value="02">Abdul Muhsin Al-Qasim</option>
+        </select>
+        <span class="audio-status" id="audio-status"></span>
       </div>
       <div id="reader-body" class="muted">Pilih surah atau juz di sebelah kiri untuk mulai membaca.</div>
     </div>
@@ -1205,13 +1230,25 @@ function filterQuranList(){
 }
 
 function verseHTML(surahNo,v){
-  return `<div class="verse">
-    <div class="verse-meta"><span>${surahNo}:${v.nomorAyat}</span></div>
-    <div class="arabic">${v.teksArab}</div>
-    <div class="translation"><i>${v.teksLatin}</i><br>${v.teksIndonesia}</div>
+  const au=encodeURIComponent(JSON.stringify(v.audio||{}));
+
+  return `<div class="verse" data-audio="${au}">
+    <div class="verse-meta">
+      <span>${surahNo}:${v.nomorAyat}</span>
+    </div>
+
+    <div class="arabic"
+         onclick="playVerseFromText(this)"
+         title="Ketuk untuk memutar ayat">
+      ${v.teksArab}
+    </div>
+
+    <div class="translation">
+      <i>${v.teksLatin}</i><br>
+      ${v.teksIndonesia}
+    </div>
   </div>`;
 }
-
 async function openSurah(n){
   const title=document.getElementById('reader-title');
   const body=document.getElementById('reader-body');
@@ -1264,6 +1301,121 @@ function saveBookmark(){
     toast('Bookmark tersimpan di browser ini.');
   }catch(e){toast('Penyimpanan browser tidak tersedia.')}
 }
+
+/* ===== AUDIO QUR'AN ===== */
+let qariId='05';
+try{qariId=localStorage.getItem('quractiveQari')||'05'}catch(e){}
+const player=new Audio();
+player.preload='auto';
+let audioQueue=[],audioIdx=-1;
+function syncAudioControls(){
+  const btn = document.getElementById('btn-play-all');
+  if(!btn) return;
+
+  if(audioQueue.length && player.src){
+    btn.textContent = player.paused
+      ? '▶ Lanjutkan'
+      : '⏸ Pause';
+  } else {
+    btn.textContent = '▶ Putar semua';
+  }
+
+  document.querySelectorAll('.verse.playing .play-btn')
+    .forEach(b => {
+      b.textContent = player.paused ? '▶' : '⏸';
+    });
+}
+
+function togglePlayAll(){
+  if(audioQueue.length && player.src){
+    if(player.paused){
+      player.play().catch(() => {
+        toast('Audio gagal dilanjutkan.');
+      });
+    } else {
+      player.pause();
+    }
+  } else {
+    playAll();
+  }
+}
+
+player.addEventListener('play', syncAudioControls);
+player.addEventListener('pause', syncAudioControls);
+
+function audioStatus(t){const el=document.getElementById('audio-status');if(el)el.textContent=t||''}
+function verseAudioUrl(el){
+  try{return JSON.parse(decodeURIComponent(el.dataset.audio))[qariId]||''}catch(e){return ''}
+}
+function clearPlaying(){
+  document.querySelectorAll('.verse.playing').forEach(e=>e.classList.remove('playing'));
+  document.querySelectorAll('.verse .play-btn').forEach(b=>b.textContent='▶');
+}
+function stopAudio(){
+  player.pause();
+  player.removeAttribute('src');
+  audioQueue=[];
+  audioIdx=-1;
+  clearPlaying();
+  audioStatus('');
+  syncAudioControls();
+}
+function playIndex(i){
+  if(i<0||i>=audioQueue.length){stopAudio();return}
+  const el=audioQueue[i],url=verseAudioUrl(el);
+  clearPlaying();
+  if(!url){toast('Audio ayat ini tidak tersedia untuk qari tersebut.');stopAudio();return}
+  audioIdx=i;
+  el.classList.add('playing');
+  const b=el.querySelector('.play-btn');if(b)b.textContent='⏸';
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  audioStatus('Memutar ayat '+el.querySelector('.verse-meta span').textContent+' · '+(document.getElementById('qari-select').selectedOptions[0]?.textContent||''));
+  player.src=url;
+  player.play().catch(()=>{toast('Audio gagal diputar. Cek koneksi internet.');stopAudio()});
+}
+function playVerse(btn){
+  const el=btn.closest('.verse');
+  // ketuk lagi pada ayat yang sedang diputar = jeda / lanjut
+  if(audioQueue[audioIdx]===el&&player.src){
+    if(player.paused){player.play();btn.textContent='⏸'}
+    else{player.pause();btn.textContent='▶'}
+    return;
+  }
+  audioQueue=[el];playIndex(0);
+}
+function playVerseFromText(el){
+  const verse = el.closest('.verse');
+
+  if(audioQueue[audioIdx] === verse && player.src){
+    if(player.paused){
+      player.play();
+    } else {
+      player.pause();
+    }
+    return;
+  }
+
+  audioQueue = [verse];
+  playIndex(0);
+}
+function playAll(){
+  const list=[...document.querySelectorAll('#reader-body .verse')];
+  if(!list.length){toast('Buka surah atau juz dulu.');return}
+  audioQueue=list;playIndex(0);
+}
+function changeQari(){
+  qariId=document.getElementById('qari-select').value;
+  try{localStorage.setItem('quractiveQari',qariId)}catch(e){}
+  if(audioIdx>=0)playIndex(audioIdx); // ganti qari langsung di ayat yang sedang jalan
+}
+player.addEventListener('ended',()=>{
+  if(audioIdx+1<audioQueue.length)playIndex(audioIdx+1);
+  else{stopAudio();toast('Bacaan selesai 🌿')}
+});
+player.addEventListener('error',()=>{
+  if(player.getAttribute('src')){toast('Audio gagal dimuat. Cek koneksi internet.');stopAudio()}
+});
+document.getElementById('qari-select').value=qariId;
 
 /* ===== GAME ===== */
 /* ===== HAFIZ QUEST: 30 JUZ ===== */
