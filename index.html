@@ -732,14 +732,6 @@ body.dark .streak-day.on i {
 body.dark .streak-day.today i {
   border-color: #9fc8a8;
 }
-
-body:before{background:color-mix(in srgb,var(--gold) 14%,transparent)}
-body:after{background:color-mix(in srgb,var(--primary) 12%,transparent)}
-.profile,.avatar-lg,.profile-head .avatar-lg{background:var(--soft)}
-.leaf{color:var(--gold)}
-.quote{border-left-color:var(--gold)}
-.hero-visual{background:linear-gradient(145deg,var(--soft),var(--mint))}
-  
 </style>
 </head>
 
@@ -1438,7 +1430,15 @@ function cekMasjidTerdekat(){
   );
 }
 
-function showView(name){
+function showView(name, fromPop){
+  // catat ke riwayat browser supaya tombol back bisa mundur antar halaman
+  if(!fromPop){
+    try{
+      const cur = history.state && history.state.view;
+      if(cur === undefined) history.replaceState({view:name}, '');
+      else if(cur !== name) history.pushState({view:name}, '');
+    }catch(e){}
+  }
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+name));
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
   window.scrollTo({top:0,behavior:'smooth'});
@@ -1446,6 +1446,13 @@ function showView(name){
   if(name==='quran')renderSurah();
   if(name==='game')renderJuzMap();
 }
+window.addEventListener('popstate', e=>{
+  const v = e.state && e.state.view;
+  if(v && document.body.classList.contains('logged-in')){
+    closeProfileMenu();
+    showView(v, true);
+  }
+});
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
 
 /* ===== GOALS ===== */
