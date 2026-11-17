@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quractive · Masuk atau Daftar</title>
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#14606d">
+<meta name="theme-color" content="#F7F2E8">
 <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
 <style>
 /* ===== PALET WARNA QURACTIVE: MOCHA, IVORY & GOLD ===== */
@@ -79,32 +79,17 @@ body:not(.auth-checking) #loading-screen { display: none !important; }
   align-items: center;
   justify-content: center;
   gap: 14px;
-  background: #0d2927;
-  color: #fbfaf5;
+  background: var(--bg);
+  color: var(--text);
   font-family: Georgia, serif;
 }
-
-#loading-screen .loading-brand {
-  font-size: 38px;
-  font-weight: bold;
-  letter-spacing: -1px;
-}
-
-#loading-screen .loading-brand span {
-  color: #58a77f;
-}
-
-#loading-screen .loading-text {
-  font-family: system-ui, sans-serif;
-  font-size: 13px;
-  color: #c4d7cf;
-}
-
+#loading-screen .loading-brand { font-size: 38px; font-weight: bold; letter-spacing: -1px; }
+#loading-screen .loading-brand span { color: var(--gold); }
+#loading-screen .loading-text { font-family: system-ui, sans-serif; font-size: 13px; color: var(--muted); }
 #loading-screen .loading-spinner {
-  width: 27px;
-  height: 27px;
-  border: 3px solid #ffffff30;
-  border-top-color: #91d6b5;
+  width: 27px; height: 27px;
+  border: 3px solid var(--line);
+  border-top-color: var(--primary);
   border-radius: 50%;
   animation: quractive-spin .8s linear infinite;
 }
@@ -752,6 +737,16 @@ body.dark .streak-day.today i {
 
 <body class="auth-checking">
 
+<body class="auth-checking">
+<script>
+try {
+  if (localStorage.getItem("quractive-theme") === "dark") {
+    document.body.classList.add("dark");
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", "#241E19");
+  }
+} catch (e) {}
+</script>
+
 <div id="loading-screen">
   <div class="loading-brand">Quractive<span>.</span></div>
   <div class="loading-spinner"></div>
@@ -832,7 +827,6 @@ body.dark .streak-day.today i {
       <button class="pm-item" role="menuitem" onclick="showView('dashboard');closeProfileMenu()">🌿 Dashboard saya</button>
       <button class="pm-item" role="menuitem" onclick="showView('onboarding');closeProfileMenu()">🎯 Ubah goals</button>
       <button class="pm-item" role="menuitem" onclick="showView('settings');closeProfileMenu()">🔔 Pengingat</button>
-      <button class="pm-item" role="menuitem" onclick="toggleTheme();closeProfileMenu()">🌗 Ganti tema</button>
       <div class="pm-sep"></div>
       <button class="pm-item danger" role="menuitem" onclick="closeProfileMenu();logout()">⎋ Keluar</button>
     </div>
@@ -1238,12 +1232,15 @@ window.setTheme = function(theme) {
     t.setAttribute("aria-label", theme === "dark" ? "Ganti ke mode terang" : "Ganti ke mode gelap");
   }
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", theme === "dark" ? "#241E19" : "#14606d");
+  if (meta) meta.setAttribute("content", theme === "dark" ? "#241E19" : "#F7F2E8");
   try { localStorage.setItem("quractive-theme", theme); } catch (e) {}
 };
 window.toggleTheme = function() {
   window.setTheme(document.body.classList.contains("dark") ? "light" : "dark");
 };
+
+try { window.setTheme(localStorage.getItem("quractive-theme") || "light"); }
+catch (e) { window.setTheme("light"); }
 
 // Pindah antara login dan daftar
 window.showAuthView = function(view, event) {
