@@ -56,6 +56,73 @@ body:before{width:340px;height:340px;top:-160px;left:-100px;background:#b8d5bd66
 body:after{width:300px;height:300px;right:-100px;bottom:-150px;background:#d9cba566}
 button,input,select{font:inherit}
 button{cursor:pointer}
+/* ===== MOBILE APP INTERACTION ===== */
+button,
+.menu-tile,
+.juz-tile,
+.surah-btn,
+.quest-card,
+.goal-option,
+.game-mode,
+.mc-option,
+.answer {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    background-color .18s ease,
+    border-color .18s ease;
+}
+
+/* Efek saat disentuh */
+button:active,
+.menu-tile:active,
+.juz-tile:active,
+.surah-btn:active,
+.quest-card:active,
+.goal-option:active,
+.game-mode:active,
+.mc-option:active,
+.answer:active {
+  transform: scale(.96);
+}
+
+/* Efek saat diarahkan mouse */
+.menu-tile:hover,
+.juz-tile:hover,
+.surah-btn:hover,
+.quest-card:hover,
+.goal-option:hover,
+.game-mode:hover {
+  box-shadow: 0 7px 18px rgba(92,68,53,.10);
+}
+
+/* Efek pilihan aktif */
+.surah-btn.active,
+.game-mode.active {
+  transform: scale(.98);
+}
+/* ===== EFEK SENTUH TOMBOL ===== */
+button{
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .16s ease, filter .16s ease;
+}
+
+button:active{
+  transform:scale(.95);
+  filter:brightness(.94);
+}
+
+.nav button{
+  transition:background .2s ease,
+             color .2s ease,
+             transform .16s ease;
+}
+
+.nav button:active{
+  transform:scale(.90);
+}
 a{color:var(--primary);text-decoration:none;font-weight:650;cursor:pointer}
 a:hover{text-decoration:underline}
 h1{font-family:Georgia,serif;letter-spacing:-.6px}
@@ -176,6 +243,22 @@ body.logged-in .shell{display:none}
 .main{max-width:1160px;margin:auto;padding:32px 24px 60px}
 .view{display:none}
 .view.active{display:block}
+/* ===== ANIMASI PERPINDAHAN HALAMAN ===== */
+.view.active{
+  display:block;
+  animation:pageEnter .28s ease-out both;
+}
+
+@keyframes pageEnter{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
 .eyebrow{color:var(--green);font-size:11px;text-transform:uppercase;letter-spacing:1.8px;font-weight:800}
 .h1{font-size:clamp(32px,5vw,54px);line-height:1.08;letter-spacing:-2px;margin:12px 0}
 .lead{color:var(--muted);font-size:15px;line-height:1.75;max-width:600px}
@@ -278,6 +361,26 @@ body.logged-in .shell{display:none}
 .day .hijri{display:block;font-size:9px;line-height:1.25;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}
 .day .hijri-year{display:block;font-size:9px;color:var(--muted);margin-top:2px}
 .day .sunnah-mark{display:block;font-size:9px;line-height:1.25;color:var(--green);margin-top:3px;overflow-wrap:anywhere}
+.day .haram-mark{
+  display:block;
+  font-size:9px;
+  line-height:1.3;
+  color:#D62828;
+  font-weight:800;
+  margin-top:3px;
+  overflow-wrap:anywhere;
+}
+
+.day.haram-puasa{
+  background:#FDE2E2;
+  border:1px solid #E57373;
+  color:#B71C1C;
+}
+
+.day.haram-puasa .hijri,
+.day.haram-puasa .hijri-year{
+  color:#B71C1C;
+}
 .day.marked{border-color:#9dc9b4;background:#f0f7f2}
 .day.today{background:var(--green);color:white}
 .day.today .hijri{color:#d8e9e2}
@@ -371,6 +474,19 @@ body.logged-in .shell{display:none}
     background:rgba(251,250,245,.97);border-top:1px solid var(--line);
     padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:10}
   .nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;padding:6px 2px}
+  .nav button.active{
+  transform:translateY(-3px);
+  border-radius:12px;
+  background:var(--mint);
+}
+
+.nav button i{
+  transition:transform .2s ease;
+}
+
+.nav button.active i{
+  transform:scale(1.15);
+}
   .nav button i{display:block;font-size:20px}
   .main{padding-bottom:90px}
   .footer{padding-bottom:90px}
@@ -414,7 +530,19 @@ body.logged-in .shell{display:none}
 }
 /* ===== MENU DASHBOARD ===== */
 .menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:17px 0}
-.menu-tile{background:white;border:1px solid var(--line);border-radius:18px;padding:20px 8px;text-align:center;color:var(--ink);font-weight:700;font-size:13px;transition:transform .15s}
+.menu-tile{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:20px 8px;
+  text-align:center;
+  color:var(--ink);
+  font-weight:700;
+  font-size:13px;
+  transition:all .2s ease;
+  cursor:pointer;
+  user-select:none;
+}
 .menu-tile i{display:block;font-style:normal;font-size:32px;margin-bottom:8px}
 .menu-tile:hover{border-color:var(--green);transform:translateY(-2px)}
 .back-btn{margin-bottom:14px}
@@ -732,6 +860,103 @@ body.dark .streak-day.on i {
 body.dark .streak-day.today i {
   border-color: #9fc8a8;
 }
+
+/* ===== WARNA TAJWID ===== */
+tajweed.ham_wasl,tajweed.slnt{color:#9a9a9a}
+tajweed.madda_normal{color:#537FFF}
+tajweed.madda_permissible{color:#4050FF}
+tajweed.madda_necessary{color:#000EBC}
+tajweed.madda_obligatory{color:#2144C1}
+tajweed.qalaqah{color:#DD0008}
+tajweed.ikhafa_shafawi{color:#D500B7}
+tajweed.ikhafa{color:#9400A8}
+tajweed.idgham_shafawi{color:#58B800}
+tajweed.iqlab{color:#26BFFD}
+tajweed.idgham_ghunnah{color:#169777}
+tajweed.idgham_wo_ghunnah{color:#169200}
+tajweed.idgham_mutajanisayn,tajweed.idgham_mutaqaribayn{color:#A1A1A1}
+tajweed.ghunnah{color:#FF7E1E}
+body.dark tajweed.madda_necessary,body.dark tajweed.madda_obligatory,body.dark tajweed.madda_permissible,body.dark tajweed.madda_normal{filter:brightness(1.5)}
+body.tajwid-off tajweed{color:inherit!important;filter:none!important}
+.tajwid-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.tajwid-legend{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:12px;background:var(--card)}
+.tajwid-legend summary{cursor:pointer;font-weight:700}
+.tajwid-legend div{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 12px;margin-top:10px}
+.tajwid-legend span{display:flex;align-items:center;gap:7px}
+.tajwid-legend i{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+
+/* ===== INFO TAJWID ===== */
+tajweed{cursor:pointer}
+tajweed.laam_shamsiyah{color:#A1A1A1}
+.tj-pop{position:fixed;left:12px;right:12px;bottom:24px;max-width:460px;margin:auto;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:14px 16px;z-index:40;display:none}
+.tj-pop.show{display:block}
+.tj-head{display:flex;align-items:center;gap:10px;font-weight:800;font-size:14px}
+.tj-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0}
+.tj-close{margin-left:auto;border:0;background:transparent;color:var(--muted);font-size:18px}
+.tj-pop p{margin:8px 0 0;font-size:12px;line-height:1.6;color:var(--muted)}
+
+/* ===== BOOKMARK ===== */
+.bm-btn{border:0;background:transparent;font-size:17px;opacity:.35;padding:2px 6px;line-height:1;filter:grayscale(1)}
+.bm-btn.on{opacity:1;filter:none}
+.verse.bm-flash{background:color-mix(in srgb,var(--gold) 25%,transparent);border-radius:12px}
+.bm-chips{display:flex;flex-wrap:wrap;gap:8px}
+.bm-chip{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:99px;padding:8px 12px;font-size:12px}
+.bm-chip.sel{border-color:var(--primary);background:var(--soft);font-weight:700}
+.bm-item{display:flex;gap:8px;align-items:stretch;margin-bottom:10px}
+.bm-open{flex:1;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;padding:13px 15px}
+.bm-open b{display:block;font-size:14px}
+.bm-open small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.bm-open em{display:block;font-size:12px;margin-top:6px}
+
+/* ===== TAJWID LEBIH MENCOLOK ===== */
+:root{
+  --tj-hamwasl:#8E8E8E; --tj-mad:#1F5BFF; --tj-madj:#00A2FF; --tj-madw:#5A2DFF; --tj-madn:#003AB8;
+  --tj-qalqalah:#FF1A1A; --tj-ghunnah:#FF7A00; --tj-ikhfa:#B000D8; --tj-ikhfas:#FF00B8;
+  --tj-idgh:#00B070; --tj-idgwo:#2DBF00; --tj-idgs:#80D000; --tj-iqlab:#00CFC8; --tj-mut:#9A9A9A;
+}
+body.dark{
+  --tj-hamwasl:#A8A8A8; --tj-mad:#5C8DFF; --tj-madj:#3DB8FF; --tj-madw:#9A7BFF; --tj-madn:#C084FC;
+  --tj-qalqalah:#FF5C5C; --tj-ghunnah:#FF9A3D; --tj-ikhfa:#E066FF; --tj-ikhfas:#FF4DC9;
+  --tj-idgh:#2EE6A0; --tj-idgwo:#5CE63A; --tj-idgs:#A6F23A; --tj-iqlab:#3DE0F0; --tj-mut:#B0B0B0;
+}
+.arabic{color:var(--text)}
+tajweed{-webkit-text-stroke:.35px currentColor}
+body.dark tajweed{filter:none!important}
+tajweed.ham_wasl,tajweed.slnt,tajweed.laam_shamsiyah{color:var(--tj-hamwasl)}
+tajweed.madda_normal{color:var(--tj-mad)}
+tajweed.madda_permissible{color:var(--tj-madj)}
+tajweed.madda_obligatory{color:var(--tj-madw)}
+tajweed.madda_necessary{color:var(--tj-madn)}
+tajweed.qalaqah{color:var(--tj-qalqalah)}
+tajweed.ghunnah{color:var(--tj-ghunnah)}
+tajweed.ikhafa{color:var(--tj-ikhfa)}
+tajweed.ikhafa_shafawi{color:var(--tj-ikhfas)}
+tajweed.idgham_ghunnah{color:var(--tj-idgh)}
+tajweed.idgham_wo_ghunnah{color:var(--tj-idgwo)}
+tajweed.idgham_shafawi{color:var(--tj-idgs)}
+tajweed.iqlab{color:var(--tj-iqlab)}
+tajweed.idgham_mutajanisayn,tajweed.idgham_mutaqaribayn{color:var(--tj-mut)}
+body.tajwid-off tajweed{-webkit-text-stroke:0}
+
+/* legenda ikut warna baru (tanpa ubah HTML) */
+.tajwid-legend span:nth-child(1) i{background:var(--tj-hamwasl)!important}
+.tajwid-legend span:nth-child(2) i{background:var(--tj-mad)!important}
+.tajwid-legend span:nth-child(3) i{background:var(--tj-madj)!important}
+.tajwid-legend span:nth-child(4) i{background:var(--tj-madw)!important}
+.tajwid-legend span:nth-child(5) i{background:var(--tj-madn)!important}
+.tajwid-legend span:nth-child(6) i{background:var(--tj-qalqalah)!important}
+.tajwid-legend span:nth-child(7) i{background:var(--tj-ghunnah)!important}
+.tajwid-legend span:nth-child(8) i{background:var(--tj-ikhfa)!important}
+.tajwid-legend span:nth-child(9) i{background:var(--tj-ikhfas)!important}
+.tajwid-legend span:nth-child(10) i{background:var(--tj-idgh)!important}
+.tajwid-legend span:nth-child(11) i{background:var(--tj-idgwo)!important}
+.tajwid-legend span:nth-child(12) i{background:var(--tj-idgs)!important}
+.tajwid-legend span:nth-child(13) i{background:var(--tj-iqlab)!important}
+.tajwid-legend span:nth-child(14) i{background:var(--tj-mut)!important}
+
+/* ===== FOTO PROFIL ===== */
+.profile,.avatar-lg{overflow:hidden;padding:0}
+.profile img,.avatar-lg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
 </style>
 </head>
 
@@ -827,6 +1052,7 @@ try {
       <button class="pm-item" role="menuitem" onclick="showView('dashboard');closeProfileMenu()">🌿 Dashboard saya</button>
       <button class="pm-item" role="menuitem" onclick="showView('onboarding');closeProfileMenu()">🎯 Ubah goals</button>
       <button class="pm-item" role="menuitem" onclick="showView('settings');closeProfileMenu()">🔔 Pengingat</button>
+      <button class="pm-item" role="menuitem" onclick="showView('bookmark');closeProfileMenu()">🔖 Bookmark</button>
       <div class="pm-sep"></div>
       <button class="pm-item danger" role="menuitem" onclick="closeProfileMenu();logout()">⎋ Keluar</button>
     </div>
@@ -847,6 +1073,11 @@ try {
         <div class="avatar-lg" id="avatar-lg">Q</div>
         <div><b id="profile-name-show">Pengguna Quractive</b><span id="profile-email-show"></span></div>
       </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <button class="btn secondary small" onclick="document.getElementById('photo-input').click()">📷 Ganti foto</button>
+        <button class="btn secondary small" id="photo-remove" onclick="removePhoto()" style="display:none">Hapus foto</button>
+        <input type="file" id="photo-input" accept="image/*" hidden onchange="pickPhoto(this)">
+      </div>
       <div class="field"><label for="profile-name-input">Nama tampilan</label><input id="profile-name-input" type="text" placeholder="Nama kamu"></div>
       <div class="field"><label for="profile-email-input">Email</label><input id="profile-email-input" type="email" readonly></div>
       <button class="btn" onclick="saveProfileName()">Simpan perubahan</button>
@@ -854,6 +1085,7 @@ try {
     <div class="card">
       <div class="card-title"><h3>Pintasan</h3><span>✦</span></div>
       <div style="display:grid;gap:10px">
+        <button class="goal-option" onclick="showView('bookmark')"><div class="iconbox">🔖</div><div><h3>Bookmark</h3><p>Lihat ayat dan bacaan yang kamu tandai.</p></div>→</button>
         <button class="goal-option" onclick="showView('onboarding')"><div class="iconbox">🎯</div><div><h3>Ubah goals</h3><p>Atur ulang target Qur'anmu.</p></div>→</button>
         <button class="goal-option" onclick="showView('settings')"><div class="iconbox">🔔</div><div><h3>Pengingat</h3><p>Atur notifikasi ibadah.</p></div>→</button>
         <button class="goal-option" onclick="logout()"><div class="iconbox" style="background:#fff1ef;color:#b24a4a">⎋</div><div><h3 style="color:#b24a4a">Keluar dari akun</h3><p>Akhiri sesi di perangkat ini.</p></div></button>
@@ -928,7 +1160,10 @@ try {
     <div class="card">
       <div class="card-title">
         <h3 id="reader-title">Pilih surah atau juz</h3>
-        <button class="btn secondary small" onclick="saveBookmark()">🔖 Bookmark</button>
+        <div style="display:flex;gap:6px">
+          <button class="btn secondary small" onclick="saveBookmark()">🔖 Tandai</button>
+          <button class="btn secondary small" onclick="showView('bookmark')">📑 Daftar</button>
+        </div>
       </div>
       <div class="audio-bar">
         <button class="btn small" id="btn-play-all" onclick="togglePlayAll()">
@@ -944,9 +1179,42 @@ try {
         </select>
         <span class="audio-status" id="audio-status"></span>
       </div>
+      <div class="tajwid-bar">
+        <button class="btn secondary small" id="btn-tajwid" onclick="toggleTajwid()">🎨 Warna tajwid: aktif</button>
+        <span class="muted">Ketuk huruf berwarna untuk lihat hukum bacaannya.</span>
+      </div>
+      <details class="tajwid-legend">
+        <summary>Arti warna tajwid</summary>
+        <div>
+          <span><i style="background:#9a9a9a"></i>Hamzah wasl / huruf tidak dibaca</span>
+          <span><i style="background:#537FFF"></i>Mad thabi'i (2 harakat)</span>
+          <span><i style="background:#4050FF"></i>Mad jaiz (2/4/6)</span>
+          <span><i style="background:#2144C1"></i>Mad wajib (4/5)</span>
+          <span><i style="background:#000EBC"></i>Mad lazim (6)</span>
+          <span><i style="background:#DD0008"></i>Qalqalah</span>
+          <span><i style="background:#FF7E1E"></i>Ghunnah (dengung)</span>
+          <span><i style="background:#9400A8"></i>Ikhfa haqiqi</span>
+          <span><i style="background:#D500B7"></i>Ikhfa syafawi</span>
+          <span><i style="background:#169777"></i>Idgham bighunnah</span>
+          <span><i style="background:#169200"></i>Idgham bilaghunnah</span>
+          <span><i style="background:#58B800"></i>Idgham syafawi (mimi)</span>
+          <span><i style="background:#26BFFD"></i>Iqlab</span>
+          <span><i style="background:#A1A1A1"></i>Idgham mutajanisain / mutaqaribain</span>
+        </div>
+      </details>
       <div id="reader-body" class="muted">Pilih surah atau juz di sebelah kiri untuk mulai membaca.</div>
     </div>
   </div>
+</section>
+
+<!-- Bookmark -->
+<section id="view-bookmark" class="view">
+  <div class="eyebrow">Tandai · Simpan · Lanjutkan</div>
+  <h1 class="h1" style="font-size:38px">Bookmark</h1>
+  <p class="lead">Ayat, surah, dan juz yang kamu tandai ada di sini. Ketuk untuk lanjut membaca.</p>
+  <div class="bm-chips" id="bm-filter" style="margin:20px 0 14px"></div>
+  <div id="bm-list"></div>
+  <div class="notice">Tandai ayat lewat ikon 🔖 di samping nomor ayat saat membaca Al-Qur'an.</div>
 </section>
 
 <!-- Game -->
@@ -1076,6 +1344,26 @@ try {
     </div>
   </div>
 </div>
+<div class="tj-pop" id="tj-pop" role="dialog" aria-live="polite">
+  <div class="tj-head"><span class="tj-dot" id="tj-dot"></span><span id="tj-name"></span><button class="tj-close" onclick="document.getElementById('tj-pop').classList.remove('show')" aria-label="Tutup">✕</button></div>
+  <div class="arabic" id="tj-text" style="font-size:26px;text-align:center;margin:6px 0 0;line-height:1.8"></div>
+  <p id="tj-desc"></p>
+</div>
+
+<div class="modal-back" id="bm-modal">
+  <div class="modal-box">
+    <h3 id="bm-title">Tandai bacaan</h3>
+    <p id="bm-sub"></p>
+    <div class="field"><label>Jenis bookmark</label><div class="bm-chips" id="bm-labels"></div></div>
+    <div class="field"><label for="bm-note">Catatan (opsional)</label><input id="bm-note" type="text" maxlength="120" placeholder="mis. ayat favorit untuk dihafal"></div>
+    <div class="modal-actions">
+      <button class="btn danger" id="bm-del" onclick="deleteBmFromModal()">Hapus</button>
+      <button class="btn secondary" onclick="closeBmModal()">Batal</button>
+      <button class="btn" onclick="saveBmFromModal()">Simpan</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 </div>
 
@@ -1097,7 +1385,8 @@ import {
 import {
   getFirestore,
   doc,
-  setDoc
+  setDoc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1186,6 +1475,7 @@ window.quractiveAuth = auth;
 window.quractiveDb = db;
 window.quractiveSetDoc = setDoc;
 window.quractiveDoc = doc;
+window.quractiveGetDoc = getDoc;
   
 function enterApp() {
   document.body.classList.add("logged-in");
@@ -1371,6 +1661,7 @@ function refreshProfileUI(user){
   document.getElementById('profile-email-input').value=email;
   const first=name.split(' ')[0];
   document.getElementById('dash-greeting').textContent="Assalamu'alaikum, "+first+"! 🌿";
+  loadPhoto(user);
 }
 async function saveProfileName(){
   const name=document.getElementById('profile-name-input').value.trim();
@@ -1379,6 +1670,75 @@ async function saveProfileName(){
     await window.updateDisplayName(name);
     toast('Profil berhasil diperbarui.');
   }catch(e){toast('Gagal menyimpan profil. Coba lagi.')}
+}
+
+/* ===== FOTO PROFIL ===== */
+function photoKey(uid){return 'quractivePhoto:'+uid}
+function applyAvatar(src){
+  ['profile-btn','avatar-lg'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.textContent='';
+    const img=new Image();
+    img.src=src;img.alt='Foto profil';
+    el.appendChild(img);
+  });
+  const rm=document.getElementById('photo-remove');
+  if(rm)rm.style.display='';
+}
+async function loadPhoto(user){
+  const rm=document.getElementById('photo-remove');
+  if(rm)rm.style.display='none';
+  if(!user)return;
+  let src='';
+  try{src=localStorage.getItem(photoKey(user.uid))||''}catch(e){}
+  if(src){applyAvatar(src);return}
+  try{
+    if(window.quractiveGetDoc){
+      const snap=await window.quractiveGetDoc(window.quractiveDoc(window.quractiveDb,'users',user.uid));
+      const p=snap.exists()?snap.data().photo:'';
+      if(p){
+        try{localStorage.setItem(photoKey(user.uid),p)}catch(e){}
+        if(window.quractiveAuth.currentUser&&window.quractiveAuth.currentUser.uid===user.uid)applyAvatar(p);
+      }
+    }
+  }catch(e){}
+}
+function pickPhoto(input){
+  const file=input.files&&input.files[0];
+  input.value='';
+  if(!file)return;
+  if(!file.type.startsWith('image/')){toast('Pilih file gambar ya.');return}
+  const user=window.quractiveAuth&&window.quractiveAuth.currentUser;
+  if(!user){toast('Silakan login dulu.');return}
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const img=new Image();
+    img.onload=async()=>{
+      // potong persegi dari tengah, kecilkan jadi 256px
+      const size=256,s=Math.min(img.width,img.height);
+      const c=document.createElement('canvas');c.width=c.height=size;
+      c.getContext('2d').drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,size,size);
+      const data=c.toDataURL('image/jpeg',0.85);
+      try{localStorage.setItem(photoKey(user.uid),data)}catch(e){}
+      applyAvatar(data);
+      try{
+        await window.quractiveSetDoc(window.quractiveDoc(window.quractiveDb,'users',user.uid),{photo:data,updatedAt:new Date().toISOString()},{merge:true});
+        toast('Foto profil diperbarui.');
+      }catch(e){console.error('Gagal simpan foto:',e);toast('Foto tersimpan di perangkat ini, tapi gagal disinkronkan ('+(e.code||'error')+').')}
+    };
+    img.onerror=()=>toast('Gambar tidak bisa dibaca.');
+    img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+async function removePhoto(){
+  const user=window.quractiveAuth&&window.quractiveAuth.currentUser;
+  if(!user)return;
+  try{localStorage.removeItem(photoKey(user.uid))}catch(e){}
+  loadPhoto(user);
+  try{await window.quractiveSetDoc(window.quractiveDoc(window.quractiveDb,'users',user.uid),{photo:''},{merge:true})}catch(e){}
+  toast('Foto profil dihapus.');
 }
 
 /* ===== MASJID TERDEKAT (Google Maps) ===== */
@@ -1445,6 +1805,7 @@ function showView(name, fromPop){
   if(name==='calendar')renderCalendar();
   if(name==='quran')renderSurah();
   if(name==='game')renderJuzMap();
+  if(name==='bookmark')renderBookmarks();
 }
 window.addEventListener('popstate', e=>{
   const v = e.state && e.state.view;
@@ -1534,24 +1895,202 @@ function filterQuranList(){
 
 function verseHTML(surahNo,v){
   const au=encodeURIComponent(JSON.stringify(v.audio||{}));
-
   return `<div class="verse" data-audio="${au}">
     <div class="verse-meta">
       <span>${surahNo}:${v.nomorAyat}</span>
+      <button class="bm-btn" data-s="${surahNo}" data-a="${v.nomorAyat}" onclick="bookmarkVerse(this)" title="Tandai ayat ini" aria-label="Tandai ayat">🔖</button>
     </div>
-
-    <div class="arabic"
-         onclick="playVerseFromText(this)"
-         title="Ketuk untuk memutar ayat">
-      ${v.teksArab}
-    </div>
-
+    <div class="arabic" data-key="${surahNo}:${v.nomorAyat}" onclick="playVerseFromText(this)" title="Ketuk untuk memutar ayat">${v.teksArab}</div>
     <div class="translation">
       <i>${v.teksLatin}</i><br>
       ${v.teksIndonesia}
     </div>
   </div>`;
 }
+
+/* ===== BOOKMARK ===== */
+const BM_LABELS={
+  last:{icon:'📍',name:'Terakhir dibaca'},
+  fav:{icon:'⭐',name:'Favorit'},
+  hafalan:{icon:'🧠',name:'Hafalan'},
+  murajaah:{icon:'🔁',name:'Murajaah'},
+  belajar:{icon:'📚',name:'Ingin dipelajari'}
+};
+let bmDraft=null,bmFilter='all';
+function bmEsc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function bmLoad(){
+  try{
+    let a=JSON.parse(localStorage.getItem('quractiveBookmarks')||'null');
+    if(!a){
+      a=[];
+      const old=JSON.parse(localStorage.getItem('quractiveBookmark')||'null');
+      if(old&&old.n)a.push({id:'b'+Date.now(),type:old.type,n:old.n,ayah:0,label:'last',note:'',t:Date.now()});
+    }
+    return Array.isArray(a)?a:[];
+  }catch(e){return []}
+}
+function bmSave(a){try{localStorage.setItem('quractiveBookmarks',JSON.stringify(a))}catch(e){toast('Penyimpanan browser tidak tersedia.')}}
+function bmName(b){
+  if(b.type==='juz')return 'Juz '+b.n;
+  const nm=(surahCache[b.n]&&surahCache[b.n].namaLatin)||(surahList[b.n-1]&&surahList[b.n-1].namaLatin)||('Surah '+b.n);
+  return b.type==='ayat'?`QS. ${nm}: ${b.ayah}`:`Surah ${b.n}. ${nm}`;
+}
+function bmFind(type,n,ayah){return bmLoad().find(b=>b.type===type&&b.n===n&&(b.ayah||0)===(ayah||0))}
+
+function saveBookmark(){
+  if(!currentRead){toast('Buka surah atau juz dulu.');return}
+  openBmModal(currentRead.type,currentRead.n,0);
+}
+function bookmarkVerse(btn){openBmModal('ayat',+btn.dataset.s,+btn.dataset.a)}
+function openBmModal(type,n,ayah){
+  const ex=bmFind(type,n,ayah||0);
+  bmDraft={type,n,ayah:ayah||0,id:ex?ex.id:null,label:ex?ex.label:(type==='ayat'?'fav':'last')};
+  document.getElementById('bm-title').textContent=ex?'Ubah bookmark':'Tandai bacaan';
+  document.getElementById('bm-sub').textContent=bmName(bmDraft);
+  document.getElementById('bm-note').value=ex?(ex.note||''):'';
+  document.getElementById('bm-del').style.display=ex?'':'none';
+  renderBmChips();
+  document.getElementById('bm-modal').classList.add('show');
+}
+function renderBmChips(){
+  document.getElementById('bm-labels').innerHTML=Object.entries(BM_LABELS).map(([k,v])=>
+    `<button type="button" class="bm-chip ${bmDraft.label===k?'sel':''}" onclick="pickBmLabel('${k}')">${v.icon} ${v.name}</button>`).join('');
+}
+function pickBmLabel(k){bmDraft.label=k;renderBmChips()}
+function closeBmModal(){document.getElementById('bm-modal').classList.remove('show');bmDraft=null}
+function saveBmFromModal(){
+  if(!bmDraft)return;
+  let a=bmLoad();
+  const note=document.getElementById('bm-note').value.trim().slice(0,120);
+  const item={id:bmDraft.id||('b'+Date.now()),type:bmDraft.type,n:bmDraft.n,ayah:bmDraft.ayah,label:bmDraft.label,note,t:Date.now()};
+  if(item.label==='last')a=a.filter(b=>b.label!=='last'||b.id===item.id);
+  const i=a.findIndex(b=>b.id===item.id);
+  if(i>=0)a[i]=item;else a.push(item);
+  bmSave(a);closeBmModal();refreshBmIcons();renderBookmarks();
+  toast('Bookmark tersimpan 🔖');
+}
+function deleteBmFromModal(){
+  if(!bmDraft||!bmDraft.id)return;
+  bmSave(bmLoad().filter(b=>b.id!==bmDraft.id));
+  closeBmModal();refreshBmIcons();renderBookmarks();
+  toast('Bookmark dihapus.');
+}
+function refreshBmIcons(){
+  const a=bmLoad().filter(b=>b.type==='ayat');
+  document.querySelectorAll('.bm-btn').forEach(b=>{
+    b.classList.toggle('on',a.some(x=>x.n===+b.dataset.s&&x.ayah===+b.dataset.a));
+  });
+}
+function setBmFilter(k){bmFilter=k;renderBookmarks()}
+async function renderBookmarks(){
+  const box=document.getElementById('bm-list');if(!box)return;
+  await loadSurahList();
+  const chips=[['all','Semua']].concat(Object.entries(BM_LABELS).map(([k,v])=>[k,v.icon+' '+v.name]));
+  document.getElementById('bm-filter').innerHTML=chips.map(([k,t])=>
+    `<button type="button" class="bm-chip ${bmFilter===k?'sel':''}" onclick="setBmFilter('${k}')">${t}</button>`).join('');
+  let a=bmLoad().sort((x,y)=>y.t-x.t);
+  if(bmFilter!=='all')a=a.filter(b=>b.label===bmFilter);
+  box.innerHTML=a.length?a.map(b=>{
+    const L=BM_LABELS[b.label]||BM_LABELS.fav;
+    const tgl=new Date(b.t).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+    return `<div class="bm-item">
+      <button class="bm-open" onclick="openBookmark('${b.id}')"><b>${L.icon} ${bmEsc(bmName(b))}</b><small>${L.name} · ${tgl}</small>${b.note?`<em>${bmEsc(b.note)}</em>`:''}</button>
+      <button class="btn secondary small" onclick="editBookmark('${b.id}')" aria-label="Ubah">✏️</button>
+    </div>`;
+  }).join(''):'<div class="muted">Belum ada bookmark. Buka Al-Qur\'an lalu ketuk 🔖 di samping ayat.</div>';
+}
+function editBookmark(id){
+  const b=bmLoad().find(x=>x.id===id);
+  if(b)openBmModal(b.type,b.n,b.ayah);
+}
+async function openBookmark(id){
+  const b=bmLoad().find(x=>x.id===id);if(!b)return;
+  showView('quran');
+  if(b.type==='juz'){await openJuz(b.n);return}
+  await openSurah(b.n);
+  if(b.type==='ayat'){
+    const el=document.querySelector(`#reader-body .arabic[data-key="${b.n}:${b.ayah}"]`);
+    if(el){
+      const v=el.closest('.verse');
+      v.scrollIntoView({behavior:'smooth',block:'center'});
+      v.classList.add('bm-flash');
+      setTimeout(()=>v.classList.remove('bm-flash'),2200);
+    }
+  }
+}
+new MutationObserver(()=>refreshBmIcons()).observe(document.getElementById('reader-body'),{childList:true});
+
+/* ===== WARNA TAJWID (Quran.com API) ===== */
+const tajwidCache={};
+async function getTajwid(n){
+  if(tajwidCache[n])return tajwidCache[n];
+  const res=await fetch(`https://api.quran.com/api/v4/quran/verses/uthmani_tajweed?chapter_number=${n}`);
+  const data=await res.json();
+  const map={};
+  (data.verses||[]).forEach(v=>{
+    map[v.verse_key]=String(v.text_uthmani_tajweed||'').replace(/<span class=end>.*?<\/span>/g,'').trim();
+  });
+  tajwidCache[n]=map;
+  return map;
+}
+async function applyTajwid(root){
+  const els=[...root.querySelectorAll('.arabic[data-key]')];
+  const nums=[...new Set(els.map(e=>e.dataset.key.split(':')[0]))];
+  try{
+    const maps=await Promise.all(nums.map(getTajwid));
+    const all=Object.assign({},...maps);
+    els.forEach(e=>{const t=all[e.dataset.key];if(t)e.innerHTML=t});
+  }catch(e){}
+}
+function toggleTajwid(){
+  const off=document.body.classList.toggle('tajwid-off');
+  try{localStorage.setItem('quractiveTajwid',off?'off':'on')}catch(e){}
+  const b=document.getElementById('btn-tajwid');
+  if(b)b.textContent=off?'🎨 Warna tajwid: mati':'🎨 Warna tajwid: aktif';
+}
+try{
+  if(localStorage.getItem('quractiveTajwid')==='off'){
+    document.body.classList.add('tajwid-off');
+    const b=document.getElementById('btn-tajwid');
+    if(b)b.textContent='🎨 Warna tajwid: mati';
+  }
+}catch(e){}
+
+/* ===== INFO TAJWID ===== */
+const TAJWID_INFO={
+ ham_wasl:['Hamzah Wasl','Hamzah yang hanya dibaca saat memulai bacaan. Jika bersambung dengan kata sebelumnya, tidak dibaca.'],
+ slnt:['Huruf tidak dibaca','Huruf yang tertulis tetapi tidak dibaca.'],
+ laam_shamsiyah:['Lam Syamsiyah','Lam ta’rif yang tidak dibaca dan melebur ke huruf sesudahnya.'],
+ madda_normal:['Mad Thabi’i','Dibaca panjang 2 harakat.'],
+ madda_permissible:['Mad Jaiz (Munfasil / ‘Aridh)','Boleh dibaca panjang 2, 4, atau 6 harakat.'],
+ madda_obligatory:['Mad Wajib Muttasil','Mad bertemu hamzah dalam satu kata. Dibaca panjang 4 sampai 5 harakat.'],
+ madda_necessary:['Mad Lazim','Mad bertemu huruf mati/tasydid asli. Wajib dibaca panjang 6 harakat.'],
+ qalaqah:['Qalqalah','Huruf ق ط ب ج د yang mati. Dibaca memantul.'],
+ ghunnah:['Ghunnah','Nun atau mim bertasydid. Dibaca dengung sekitar 2 harakat.'],
+ ikhafa:['Ikhfa Haqiqi','Nun mati atau tanwin bertemu 15 huruf ikhfa. Dibaca samar dengan dengung.'],
+ ikhafa_shafawi:['Ikhfa Syafawi','Mim mati bertemu huruf ب. Dibaca samar dengan dengung di bibir.'],
+ idgham_shafawi:['Idgham Syafawi (Mimi)','Mim mati bertemu mim. Dilebur dengan dengung.'],
+ iqlab:['Iqlab','Nun mati atau tanwin bertemu ب. Diganti bunyi mim samar dengan dengung.'],
+ idgham_ghunnah:['Idgham Bighunnah','Nun mati atau tanwin bertemu ي ن م و. Dilebur dengan dengung.'],
+ idgham_wo_ghunnah:['Idgham Bilaghunnah','Nun mati atau tanwin bertemu ل atau ر. Dilebur tanpa dengung.'],
+ idgham_mutajanisayn:['Idgham Mutajanisain','Dua huruf yang sama makhrajnya tetapi beda sifat bertemu, lalu dilebur.'],
+ idgham_mutaqaribayn:['Idgham Mutaqaribain','Dua huruf yang berdekatan makhraj atau sifatnya bertemu, lalu dilebur.']
+};
+document.addEventListener('click',e=>{
+  const pop=document.getElementById('tj-pop');
+  const t=e.target.closest&&e.target.closest('tajweed');
+  if(!t){ if(pop&&!e.target.closest('#tj-pop'))pop.classList.remove('show'); return; }
+  if(document.body.classList.contains('tajwid-off'))return;
+  e.stopPropagation();
+  const cls=t.classList[0]||'';
+  const info=TAJWID_INFO[cls]||[cls.replace(/_/g,' ')||'Tajwid','Hukum bacaan tajwid.'];
+  document.getElementById('tj-dot').style.background=getComputedStyle(t).color;
+  document.getElementById('tj-name').textContent=info[0];
+  document.getElementById('tj-text').textContent=t.textContent;
+  document.getElementById('tj-desc').textContent=info[1];
+  pop.classList.add('show');
+},true);
+
 async function openSurah(n){
   const title=document.getElementById('reader-title');
   const body=document.getElementById('reader-body');
@@ -1561,6 +2100,7 @@ async function openSurah(n){
     currentRead={type:'surah',n};
     title.textContent=`${s.nomor}. ${s.namaLatin} (${s.nama}) · ${s.arti}`;
     body.innerHTML=s.ayat.map(v=>verseHTML(n,v)).join('');
+    applyTajwid(body);
     body.scrollTop=0;
     if(window.innerWidth<=800)title.scrollIntoView({behavior:'smooth',block:'start'});
   }catch(e){body.textContent='Gagal memuat surah. Cek koneksi internet.'}
@@ -1592,6 +2132,7 @@ async function openJuz(j){
     currentRead={type:'juz',n:j};
     title.textContent=`Juz ${j}`;
     body.innerHTML=html;
+    applyTajwid(body);
     body.scrollTop=0;
     if(window.innerWidth<=800)title.scrollIntoView({behavior:'smooth',block:'start'});
   }catch(e){body.textContent='Gagal memuat juz. Cek koneksi internet.'}
@@ -1689,16 +2230,15 @@ function playVerse(btn){
 function playVerseFromText(el){
   const verse = el.closest('.verse');
 
+  // ketuk ayat yang sedang diputar = berhenti total
   if(audioQueue[audioIdx] === verse && player.src){
-    if(player.paused){
-      player.play();
-    } else {
-      player.pause();
-    }
+    stopAudio();
     return;
   }
 
-  audioQueue = [verse];
+  // ketuk ayat lain = mulai dari ayat itu, lanjut otomatis ke ayat-ayat sesudahnya
+  const all = [...document.querySelectorAll('#reader-body .verse')];
+  audioQueue = all.slice(all.indexOf(verse));
   playIndex(0);
 }
 function playAll(){
@@ -2160,11 +2700,20 @@ let calMonth=_now.getMonth(),calYear=_now.getFullYear();
 const hijriFormatter=new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura',{
   day:'numeric',month:'long',year:'numeric'
 });
+const hijriMonthFormatter = new Intl.DateTimeFormat(
+  'en-u-ca-islamic-umalqura',
+  {month:'numeric'}
+);
 function hijriParts(date){
   try{
     const parts=hijriFormatter.formatToParts(date);
     const get=type=>parts.find(p=>p.type===type)?.value||'';
-    return {day:get('day'),month:get('month'),year:get('year')};
+    return {
+      day:get('day'),
+      month:get('month'),
+      year:get('year'),
+      monthNumber:Number(hijriMonthFormatter.format(date))
+    };
   }catch(e){
     return {day:'-',month:'Hijriah',year:''};
   }
@@ -2198,14 +2747,31 @@ function renderCalendar(){
       currentRange.end=d;
     }
 
-    const fast=sunnahToday(date);
-    const marked=!!fast;  
+    const hijriDay = Number(h.day);
+
+    const isEidFitri = h.monthNumber===10 && hijriDay===1;
+    const isEidAdha = h.monthNumber===12 && hijriDay===10;
+    const isTasyrik = h.monthNumber===12 && hijriDay>=11 && hijriDay<=13;
+
+    const isNoFastDay = isEidFitri || isEidAdha || isTasyrik;
+
+    const noFastLabel = isEidFitri
+      ? 'Idulfitri'
+      : isEidAdha
+        ? 'Iduladha'
+        : isTasyrik
+          ? 'Hari Tasyrik'
+          : '';
+
+    const fast = isNoFastDay ? null : sunnahToday(date);
+    const marked = !!fast;
     const isToday=calYear===_now.getFullYear()&&calMonth===_now.getMonth()&&d===_now.getDate();
-    html+=`<div class="day ${marked?'marked':''} ${isToday?'today':''}">
+    html+=`<div class="day ${marked?'marked':''} ${isNoFastDay?'haram-puasa':''} ${isToday?'today':''}">
       <span class="gregorian-day">${d}</span>
       <span class="hijri">${h.day} ${h.month}</span>
       <span class="hijri-year">${h.year} H</span>
       ${fast?`<span class="sunnah-mark">• ${fast}</span>`:''}
+      ${isNoFastDay?`<span class="haram-mark">• ${noFastLabel}</span>`:''}
     </div>`;
   }
   grid.innerHTML=html;
