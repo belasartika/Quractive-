@@ -56,7 +56,9 @@ body:before{width:340px;height:340px;top:-160px;left:-100px;background:#b8d5bd66
 body:after{width:300px;height:300px;right:-100px;bottom:-150px;background:#d9cba566}
 button,input,select{font:inherit}
 button{cursor:pointer}
+
 /* ===== MOBILE APP INTERACTION ===== */
+
 button,
 .menu-tile,
 .juz-tile,
@@ -69,13 +71,14 @@ button,
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition:
-    transform .18s ease,
+    transform .18s cubic-bezier(.2,.8,.2,1),
     box-shadow .18s ease,
     background-color .18s ease,
-    border-color .18s ease;
+    border-color .18s ease,
+    filter .18s ease;
 }
 
-/* Efek saat disentuh */
+/* Efek saat tombol ditekan */
 button:active,
 .menu-tile:active,
 .juz-tile:active,
@@ -86,17 +89,48 @@ button:active,
 .mc-option:active,
 .answer:active {
   transform: scale(.94);
-  filter: brightness(.96);
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  filter: brightness(.94);
 }
-/* Efek saat diarahkan mouse */
-.menu-tile:hover,
-.juz-tile:hover,
-.surah-btn:hover,
-.quest-card:hover,
-.goal-option:hover,
-.game-mode:hover {
-  box-shadow: 0 7px 18px rgba(92,68,53,.10);
+
+/* Animasi yang tetap terasa setelah sentuhan dilepas */
+.tap-feedback {
+  animation: tapBounce .38s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes tapBounce {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(92,68,53,0);
+  }
+  35% {
+    transform: scale(.94);
+    box-shadow: 0 5px 16px rgba(92,68,53,.18);
+  }
+  70% {
+    transform: scale(1.025);
+    box-shadow: 0 8px 20px rgba(92,68,53,.12);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(92,68,53,0);
+  }
+}
+
+/* Efek hover khusus laptop */
+@media (hover:hover) and (pointer:fine) {
+  .menu-tile:hover,
+  .juz-tile:hover,
+  .surah-btn:hover,
+  .quest-card:hover,
+  .goal-option:hover,
+  .game-mode:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 18px rgba(92,68,53,.12);
+  }
+
+  button:hover {
+    filter: brightness(.98);
+  }
 }
 
 /* Efek pilihan aktif */
@@ -104,19 +138,12 @@ button:active,
 .game-mode.active {
   transform: scale(.98);
 }
-/* ===== EFEK SENTUH TOMBOL ===== */
-button{
-  -webkit-tap-highlight-color:transparent;
-  transition:transform .16s ease, filter .16s ease;
-}
 
-button:active{
-  transform:scale(.95);
-  filter:brightness(.94);
-}
-
-button:hover{
-  filter:brightness(.98);
+/* Hormati pengaturan pengurangan animasi */
+@media (prefers-reduced-motion: reduce) {
+  .tap-feedback {
+    animation: none;
+  }
 }
 
 button:focus-visible{
@@ -3442,6 +3469,25 @@ document.querySelectorAll('.view').forEach(v=>{
   b.onclick=()=>showView('dashboard');
   v.prepend(b);
 });
+// ===== MOBILE TAP FEEDBACK =====
+document.addEventListener('pointerdown', function(e){
+  const target=e.target.closest(
+    'button, .menu-tile, .juz-tile, .surah-btn, .quest-card, .goal-option, .game-mode, .mc-option, .answer'
+  );
+
+  if(!target || target.disabled) return;
+
+  target.classList.remove('tap-feedback');
+  void target.offsetWidth;
+  target.classList.add('tap-feedback');
+});
+
+document.addEventListener('animationend', function(e){
+  if(e.animationName==='tapBounce'){
+    e.target.classList.remove('tap-feedback');
+  }
+});
+
 renderJuzMap();renderCalendar();loadFastPrefs();loadSavedState();updateGameStats();updateNotifStatus();startReminderLoop();</script>
 
 <script>
