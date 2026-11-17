@@ -172,6 +172,9 @@ body.logged-in .shell{display:none}
 
 /* Profil + dropdown */
 .profile-wrap{position:relative}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.theme-toggle{border:1px solid var(--line);background:var(--card);color:var(--text);height:38px;width:38px;border-radius:50%;font-size:17px;display:grid;place-items:center;transition:border .2s}
+.theme-toggle:hover{border-color:var(--primary)}
 .profile{border:0;background:#dcebe5;border-radius:50%;height:38px;width:38px;display:grid;place-items:center;color:var(--green);font-weight:800;text-transform:uppercase}
 .profile:hover{box-shadow:0 0 0 3px #14606d22}
 .profile-menu{position:absolute;right:0;top:48px;width:250px;background:white;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 45px #1d3a3a22;padding:8px;display:none;z-index:20}
@@ -818,6 +821,9 @@ body.dark .streak-day.today i {
 <div class="app">
 <header class="topbar">
   <div class="brand"><img src="icon-512.png" alt="Logo Quractive" class="brand-logo"><span>Qur<em>active</em></span></div>
+  <div class="topbar-right">
+  <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Ganti tema" title="Ganti tema">🌙</button>
+
   <div class="profile-wrap" id="profile-wrap">
     <button class="profile" id="profile-btn" onclick="toggleProfileMenu(event)" title="Akun saya" aria-haspopup="true" aria-expanded="false">Q</button>
     <div class="profile-menu" id="profile-menu" role="menu">
@@ -826,10 +832,12 @@ body.dark .streak-day.today i {
       <button class="pm-item" role="menuitem" onclick="showView('dashboard');closeProfileMenu()">🌿 Dashboard saya</button>
       <button class="pm-item" role="menuitem" onclick="showView('onboarding');closeProfileMenu()">🎯 Ubah goals</button>
       <button class="pm-item" role="menuitem" onclick="showView('settings');closeProfileMenu()">🔔 Pengingat</button>
+      <button class="pm-item" role="menuitem" onclick="toggleTheme();closeProfileMenu()">🌗 Ganti tema</button>
       <div class="pm-sep"></div>
       <button class="pm-item danger" role="menuitem" onclick="closeProfileMenu();logout()">⎋ Keluar</button>
     </div>
   </div>
+</div>
 </header>
 
 <main class="main">
@@ -1219,15 +1227,23 @@ function showError(error) {
   message(errors[error.code] || "Login gagal: " + error.code);
 }
 
-// Tema terang dan gelap
 window.setTheme = function(theme) {
   document.body.classList.toggle("dark", theme === "dark");
-  document.getElementById("lightBtn").classList.toggle("active", theme === "light");
-  document.getElementById("darkBtn").classList.toggle("active", theme === "dark");
+  const l = document.getElementById("lightBtn"), d = document.getElementById("darkBtn");
+  if (l) l.classList.toggle("active", theme === "light");
+  if (d) d.classList.toggle("active", theme === "dark");
+  const t = document.getElementById("themeToggleBtn");
+  if (t) {
+    t.textContent = theme === "dark" ? "☀️" : "🌙";
+    t.setAttribute("aria-label", theme === "dark" ? "Ganti ke mode terang" : "Ganti ke mode gelap");
+  }
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", theme === "dark" ? "#241E19" : "#14606d");
   try { localStorage.setItem("quractive-theme", theme); } catch (e) {}
 };
-try { window.setTheme(localStorage.getItem("quractive-theme") || "light"); }
-catch (e) { window.setTheme("light"); }
+window.toggleTheme = function() {
+  window.setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+};
 
 // Pindah antara login dan daftar
 window.showAuthView = function(view, event) {
