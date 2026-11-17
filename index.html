@@ -1126,6 +1126,12 @@ body.dark .app .field textarea{background:var(--field);color:var(--text);border-
 .ch-post{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
 .ch-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .ch-avatar{width:38px;height:38px;border-radius:50%;background:var(--soft);color:var(--green);display:grid;place-items:center;font-weight:800;text-transform:uppercase;flex-shrink:0}
+.ch-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
 .ch-meta{flex:1;min-width:0}
 .ch-meta b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ch-meta small{color:var(--muted);font-size:11px}
@@ -1480,6 +1486,60 @@ try {
     <button class="btn" id="ch-send" onclick="postChannel()">Kirim ke semua</button>
   </div>
 
+  <div class="card" style="margin-top:24px">
+  <div class="card-title">
+    <h3>📅 Kalender Kegiatan</h3>
+  </div>
+
+  <div class="field">
+    <label for="event-month">Pilih bulan</label>
+    <input type="month" id="event-month">
+  </div>
+
+  <div id="community-calendar"></div>
+  <div id="community-event-list" style="margin-top:18px">
+    <div class="muted">Memuat kegiatan...</div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px">
+  <div class="card-title">
+    <h3>➕ Buat Kegiatan</h3>
+  </div>
+
+  <div class="field">
+    <label for="event-title">Nama kegiatan</label>
+    <input id="event-title" maxlength="100"
+      placeholder="Contoh: Kajian Jumat Berkah">
+  </div>
+
+  <div class="field">
+    <label for="event-desc">Deskripsi</label>
+    <textarea id="event-desc" rows="3"
+      maxlength="500" placeholder="Ceritakan kegiatan ini..."></textarea>
+  </div>
+
+  <div class="field">
+    <label for="event-date">Tanggal</label>
+    <input id="event-date" type="date">
+  </div>
+
+  <div class="field">
+    <label for="event-time">Waktu</label>
+    <input id="event-time" type="time">
+  </div>
+
+  <div class="field">
+    <label for="event-place">Tempat / alamat</label>
+    <input id="event-place" maxlength="200"
+      placeholder="Nama masjid atau alamat kegiatan">
+  </div>
+
+  <button class="btn" type="button" onclick="createCommunityEvent()">
+    Buat Kegiatan
+  </button>
+</div>
+
   <div class="bm-chips" id="ch-filter" style="margin-top:22px"></div>
   <div id="ch-list" style="margin-top:16px"><div class="muted">Memuat pesan...</div></div>
 
@@ -1674,6 +1734,8 @@ import {
   orderBy,
   limit,
   onSnapshot,
+  updateDoc,
+  arrayUnion,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
@@ -1764,7 +1826,10 @@ window.quractiveDb = db;
 window.quractiveSetDoc = setDoc;
 window.quractiveDoc = doc;
 window.quractiveGetDoc = getDoc;
-window.quractiveFS = { collection, addDoc, deleteDoc, doc, query, orderBy, limit, onSnapshot, serverTimestamp };
+window.quractiveFS = {
+  collection, addDoc, deleteDoc, doc, query, orderBy,
+  limit, onSnapshot, serverTimestamp, updateDoc, arrayUnion
+};
 window.quractiveCollection = collection;
 function enterApp() {
   document.body.classList.add("logged-in");
@@ -3606,12 +3671,14 @@ function chTimeAgo(ms){
 
 function startChannel(){
   if(channelUnsub)return;
+  startCommunityEvents();
   const FS=window.quractiveFS,db=window.quractiveDb;
   if(!FS||!db)return;
   const q=FS.query(FS.collection(db,'channel_posts'),FS.orderBy('createdAt','desc'),FS.limit(50));
   channelUnsub=FS.onSnapshot(q,snap=>{
     channelData=snap.docs.map(d=>({id:d.id,...d.data()}));
     renderChannel();
+    loadChannelPhotos();
   },err=>{
     console.error('Channel error:',err);
     channelUnsub=null;
@@ -3620,6 +3687,29 @@ function startChannel(){
 }
 
 function setChannelFilter(k){channelFilter=k;renderChannel()}
+const channelPhotoCache = {};
+
+async function loadChannelPhotos(){
+  const FS=window.quractiveFS;
+  const db=window.quractiveDb;
+
+  for(const p of channelData){
+    if(channelPhotoCache[p.uid]!==undefined)continue;
+
+    try{
+      const snap=await window.quractiveGetDoc(
+        window.quractiveDoc(db,'users',p.uid)
+      );
+      channelPhotoCache[p.uid]=snap.exists()
+        ? snap.data().photo||''
+        : '';
+    }catch(e){
+      channelPhotoCache[p.uid]='';
+    }
+  }
+
+  renderChannel();
+}
 
 function renderChannel(){
   const box=document.getElementById('ch-list'),filter=document.getElementById('ch-filter');
@@ -3636,13 +3726,32 @@ function renderChannel(){
     const name=p.name||'Pengguna';
     return `<div class="ch-post">
       <div class="ch-head">
-        <div class="ch-avatar">${bmEsc(name.trim()[0]||'Q')}</div>
+        <div class="ch-avatar">
+          ${channelPhotoCache[p.uid]
+            ? `<img src="${channelPhotoCache[p.uid]}" alt="Foto ${bmEsc(name)}">`
+            : bmEsc(name.trim()[0]||'Q')}
+        </div>
         <div class="ch-meta"><b>${bmEsc(name)}</b><small>${chTimeAgo(ms)}</small></div>
         ${p.uid===me?`<button class="ch-del" onclick="deleteChannelPost('${bmEsc(p.id)}')" aria-label="Hapus pesan">🗑️</button>`:''}
       </div>
       <span class="ch-cat">${CH_CATS[p.cat]||CH_CATS.lain}</span>
       <div class="ch-text">${bmEsc(p.text||'')}</div>
       ${p.place?`<div class="ch-place">📍 ${bmEsc(p.place)}</div>`:''}
+      <div class="ch-comments">
+        ${(p.comments||[]).map(c=>`
+          <div class="ch-comment">
+            <b>${bmEsc(c.name||'Pengguna')}</b>
+            <span>${bmEsc(c.text||'')}</span>
+          </div>
+        `).join('')}
+
+        <div class="ch-comment-form">
+          <input id="comment-${p.id}" type="text"
+            maxlength="300" placeholder="Tulis komentar...">
+          <button type="button"
+            onclick="addChannelComment('${p.id}')">Kirim</button>
+        </div>
+      </div>
     </div>`;
   }).join(''):'<div class="muted">Belum ada pesan di kategori ini. Jadi yang pertama berbagi!</div>';
 }
@@ -3688,6 +3797,260 @@ async function deleteChannelPost(id){
   }catch(e){
     console.error(e);
     toast('Gagal menghapus pesan.');
+  }
+}
+
+async function addChannelComment(postId){
+  const FS=window.quractiveFS;
+  const user=window.quractiveAuth?.currentUser;
+  const input=document.getElementById('comment-'+postId);
+  const text=input?.value.trim();
+
+  if(!user){toast('Silakan login dulu.');return}
+  if(!text){toast('Komentar tidak boleh kosong.');return}
+
+  try{
+    await FS.updateDoc(
+      FS.doc(window.quractiveDb,'channel_posts',postId),
+      {
+        comments: FS.arrayUnion({
+          uid:user.uid,
+          name:user.displayName||
+            (user.email?user.email.split('@')[0]:'Pengguna'),
+          text,
+          createdAt:new Date().toISOString()
+        })
+      }
+    );
+    input.value='';
+    toast('Komentar berhasil dikirim!');
+  }catch(e){
+    console.error(e);
+    toast('Gagal mengirim komentar.');
+  }
+}
+
+/* ===== KALENDER KEGIATAN KOMUNITAS ===== */
+
+let communityEvents = [];
+let communityEventUnsub = null;
+
+const eventMonthInput = document.getElementById('event-month');
+
+if(eventMonthInput){
+  eventMonthInput.value=new Date().toISOString().slice(0,7);
+  eventMonthInput.addEventListener('change',renderCommunityCalendar);
+}
+
+function startCommunityEvents(){
+  if(communityEventUnsub)return;
+
+  const FS=window.quractiveFS;
+  const db=window.quractiveDb;
+  if(!FS||!db)return;
+
+  const q=FS.query(
+    FS.collection(db,'community_events'),
+    FS.orderBy('date','asc')
+  );
+
+  communityEventUnsub=FS.onSnapshot(q,snap=>{
+    communityEvents=snap.docs.map(d=>({
+      id:d.id,...d.data()
+    }));
+    renderCommunityCalendar();
+  },err=>{
+    console.error('Community events error:',err);
+    document.getElementById('community-event-list').innerHTML=
+      '<div class="muted">Gagal memuat kegiatan.</div>';
+  });
+}
+
+function renderCommunityCalendar(){
+  const calendar=document.getElementById('community-calendar');
+  const list=document.getElementById('community-event-list');
+  const monthInput=document.getElementById('event-month');
+
+  if(!calendar||!list||!monthInput)return;
+
+  const selectedMonth=monthInput.value;
+  if(!selectedMonth)return;
+
+  const [year,month]=selectedMonth.split('-').map(Number);
+  const firstDay=new Date(year,month-1,1).getDay();
+  const totalDays=new Date(year,month,0).getDate();
+
+  const eventDates=new Set(
+    communityEvents
+      .filter(e=>e.date?.startsWith(selectedMonth))
+      .map(e=>e.date)
+  );
+
+  let html=`
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center">
+      ${['Min','Sen','Sel','Rab','Kam','Jum','Sab']
+        .map(d=>`<b style="font-size:12px;padding:7px">${d}</b>`).join('')}
+  `;
+
+  for(let i=0;i<firstDay;i++){
+    html+='<div></div>';
+  }
+
+  for(let day=1;day<=totalDays;day++){
+    const date=year+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+    const hasEvent=eventDates.has(date);
+
+    html+=`
+      <button type="button"
+        onclick="showCommunityEvents('${date}')"
+        style="padding:10px 2px;border:1px solid var(--line);
+        border-radius:10px;background:${hasEvent?'var(--soft)':'transparent'};
+        color:var(--text);cursor:pointer">
+        ${day}
+        ${hasEvent?'<div style="color:var(--green)">•</div>':''}
+      </button>
+    `;
+  }
+
+  html+='</div>';
+  calendar.innerHTML=html;
+
+  showCommunityEvents(selectedMonth+'-01');
+}
+
+function showCommunityEvents(date){
+  const list=document.getElementById('community-event-list');
+  if(!list)return;
+
+  const events=communityEvents.filter(e=>e.date===date);
+
+  list.innerHTML=`
+    <h4 style="margin-bottom:12px">
+      Kegiatan ${new Date(date+'T00:00:00').toLocaleDateString('id-ID',{
+        day:'numeric',month:'long',year:'numeric'
+      })}
+    </h4>
+    ${
+      events.length
+      ?events.map(e=>communityEventCard(e)).join('')
+      :'<div class="muted">Belum ada kegiatan pada tanggal ini.</div>'
+    }
+  `;
+}
+
+function communityEventCard(e){
+  const user=window.quractiveAuth?.currentUser;
+  const joined=(e.attendees||[]).includes(user?.uid);
+  const owner=e.uid===user?.uid;
+
+  return `
+    <div class="card" style="margin-bottom:12px;padding:14px">
+      <b>${bmEsc(e.title||'Kegiatan')}</b>
+      <p style="margin:7px 0">${bmEsc(e.description||'')}</p>
+      <div class="muted">🕒 ${bmEsc(e.time||'-')}</div>
+      <div class="muted">📍 ${bmEsc(e.place||'-')}</div>
+      <div class="muted">👥 ${(e.attendees||[]).length} peserta</div>
+
+      ${e.place?`
+        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.place)}"
+          target="_blank" rel="noopener"
+          style="display:inline-block;margin-top:10px">
+          📍 Buka Google Maps
+        </a>`:''}
+
+      <div style="margin-top:12px">
+        ${!owner?`
+          <button class="btn small ${joined?'secondary':''}"
+            onclick="joinCommunityEvent('${e.id}')"
+            ${joined?'disabled':''}>
+            ${joined?'✓ Sudah Ikut':'Ikut Kegiatan'}
+          </button>
+        `:''}
+
+        ${owner?`
+          <button class="btn secondary small"
+            onclick="deleteCommunityEvent('${e.id}')">
+            Hapus Kegiatan
+          </button>
+        `:''}
+      </div>
+    </div>
+  `;
+}
+
+async function createCommunityEvent(){
+  const FS=window.quractiveFS;
+  const user=window.quractiveAuth?.currentUser;
+
+  if(!user){toast('Silakan login dulu.');return}
+
+  const title=document.getElementById('event-title').value.trim();
+  const description=document.getElementById('event-desc').value.trim();
+  const date=document.getElementById('event-date').value;
+  const time=document.getElementById('event-time').value;
+  const place=document.getElementById('event-place').value.trim();
+
+  if(!title||!date||!time||!place){
+    toast('Lengkapi nama, tanggal, waktu, dan tempat kegiatan.');
+    return;
+  }
+
+  try{
+    await FS.addDoc(
+      FS.collection(window.quractiveDb,'community_events'),
+      {
+        uid:user.uid,
+        name:user.displayName||
+          (user.email?user.email.split('@')[0]:'Pengguna'),
+        title,description,date,time,place,
+        attendees:[],
+        createdAt:FS.serverTimestamp()
+      }
+    );
+
+    document.getElementById('event-title').value='';
+    document.getElementById('event-desc').value='';
+    document.getElementById('event-date').value='';
+    document.getElementById('event-time').value='';
+    document.getElementById('event-place').value='';
+
+    toast('Kegiatan berhasil dibuat!');
+  }catch(e){
+    console.error(e);
+    toast('Gagal membuat kegiatan. Periksa aturan Firestore.');
+  }
+}
+
+async function joinCommunityEvent(id){
+  const FS=window.quractiveFS;
+  const user=window.quractiveAuth?.currentUser;
+
+  if(!user){toast('Silakan login dulu.');return}
+
+  try{
+    await FS.updateDoc(
+      FS.doc(window.quractiveDb,'community_events',id),
+      {attendees:FS.arrayUnion(user.uid)}
+    );
+    toast('Berhasil bergabung dengan kegiatan!');
+  }catch(e){
+    console.error(e);
+    toast('Gagal bergabung dengan kegiatan.');
+  }
+}
+
+async function deleteCommunityEvent(id){
+  if(!confirm('Yakin ingin menghapus kegiatan ini?'))return;
+
+  try{
+    const FS=window.quractiveFS;
+    await FS.deleteDoc(
+      FS.doc(window.quractiveDb,'community_events',id)
+    );
+    toast('Kegiatan berhasil dihapus.');
+  }catch(e){
+    console.error(e);
+    toast('Gagal menghapus kegiatan.');
   }
 }
 /* ===== HADITS HARIAN (api.hadith.gading.dev) ===== */
