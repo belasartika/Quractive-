@@ -710,6 +710,26 @@ body.logged-in .shell{display:none}
 .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
 .streak-card{display:flex;align-items:center;gap:16px;background:linear-gradient(120deg,#fff8e8,#f0e6d6);border:1px solid #e9d9b0;border-radius:18px;padding:18px 20px;margin:17px 0}
 .streak-flame{font-size:42px;line-height:1}
+/* ===== ANIMASI API STREAK ===== */
+.streak-flame{
+  display:inline-block;
+  transform-origin:50% 90%;   /* api bergoyang dari bagian bawah */
+  animation:flameFlicker 1.4s ease-in-out infinite;
+  filter:drop-shadow(0 0 6px rgba(244,181,28,.55));
+}
+
+@keyframes flameFlicker{
+  0%,100%{ transform:scale(1) rotate(-2deg) skewX(0deg); }
+  20%    { transform:scale(1.06,1.12) rotate(2deg) skewX(2deg); }
+  40%    { transform:scale(.97,1.04) rotate(-3deg) skewX(-2deg); }
+  60%    { transform:scale(1.05,1.14) rotate(3deg) skewX(2deg); }
+  80%    { transform:scale(1,1.06) rotate(-1deg) skewX(-1deg); }
+}
+
+/* Hormati pengaturan pengurangan animasi */
+@media (prefers-reduced-motion: reduce){
+  .streak-flame{ animation:none; }
+}
 .streak-info b{display:block;font-size:26px;color:var(--ink)}
 .streak-info span{font-size:12px;color:var(--muted);line-height:1.5;display:block;max-width:300px}
 .streak-week{display:flex;gap:8px;margin-left:auto}
@@ -1100,6 +1120,20 @@ body.tajwid-off tajweed{-webkit-text-stroke:0}
 /* ===== FOTO PROFIL ===== */
 .profile,.avatar-lg{overflow:hidden;padding:0}
 .profile img,.avatar-lg img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+/* ===== KOMUNITAS ===== */
+.app .field textarea{border:1px solid var(--line);background:white;border-radius:11px;padding:12px;color:var(--ink);width:100%;font:inherit;resize:vertical;min-height:90px}
+body.dark .app .field textarea{background:var(--field);color:var(--text);border-color:var(--line)}
+.ch-post{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.ch-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ch-avatar{width:38px;height:38px;border-radius:50%;background:var(--soft);color:var(--green);display:grid;place-items:center;font-weight:800;text-transform:uppercase;flex-shrink:0}
+.ch-meta{flex:1;min-width:0}
+.ch-meta b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-meta small{color:var(--muted);font-size:11px}
+.ch-cat{display:inline-block;padding:4px 9px;border-radius:99px;background:var(--mint);color:var(--green);font-size:11px;font-weight:800;margin-bottom:8px}
+.ch-text{font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.ch-place{margin-top:10px;padding:8px 11px;border-radius:10px;background:var(--soft);font-size:12px}
+.ch-del{border:0;background:transparent;font-size:16px;opacity:.6;padding:4px 6px}
+.ch-del:hover{opacity:1}
 </style>
 </head>
 
@@ -1188,14 +1222,10 @@ try {
   <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Ganti tema" title="Ganti tema">🌙</button>
 
   <div class="profile-wrap" id="profile-wrap">
-    <button class="profile" id="profile-btn" onclick="toggleProfileMenu(event)" title="Akun saya" aria-haspopup="true" aria-expanded="false">Q</button>
+    <button class="profile" id="profile-btn" onclick="showView('profile')" title="Pengaturan akun">Q</button>
     <div class="profile-menu" id="profile-menu" role="menu">
       <div class="pm-head"><b id="pm-name">Pengguna Quractive</b><small id="pm-email"></small></div>
       <button class="pm-item" role="menuitem" onclick="showView('profile');closeProfileMenu()">👤 Pengaturan profil</button>
-      <button class="pm-item" role="menuitem" onclick="showView('dashboard');closeProfileMenu()">🌿 Dashboard saya</button>
-      <button class="pm-item" role="menuitem" onclick="showView('onboarding');closeProfileMenu()">🎯 Ubah goals</button>
-      <button class="pm-item" role="menuitem" onclick="showView('settings');closeProfileMenu()">🔔 Pengingat</button>
-      <button class="pm-item" role="menuitem" onclick="showView('bookmark');closeProfileMenu()">🔖 Bookmark</button>
       <div class="pm-sep"></div>
       <button class="pm-item danger" role="menuitem" onclick="closeProfileMenu();logout()">⎋ Keluar</button>
     </div>
@@ -1210,7 +1240,7 @@ try {
   <div class="eyebrow">Akun saya</div>
   <h1 class="h1" style="font-size:38px">Pengaturan profil</h1>
   <p class="lead">Kelola informasi akun dan preferensi Quractive-mu.</p>
-  <div class="two-col" style="margin-top:22px">
+  <div style="margin-top:22px;max-width:560px">
     <div class="card">
       <div class="profile-head">
         <div class="avatar-lg" id="avatar-lg">Q</div>
@@ -1223,15 +1253,9 @@ try {
       </div>
       <div class="field"><label for="profile-name-input">Nama tampilan</label><input id="profile-name-input" type="text" placeholder="Nama kamu"></div>
       <div class="field"><label for="profile-email-input">Email</label><input id="profile-email-input" type="email" readonly></div>
-      <button class="btn" onclick="saveProfileName()">Simpan perubahan</button>
-    </div>
-    <div class="card">
-      <div class="card-title"><h3>Pintasan</h3><span>✦</span></div>
-      <div style="display:grid;gap:10px">
-        <button class="goal-option" onclick="showView('bookmark')"><div class="iconbox">🔖</div><div><h3>Bookmark</h3><p>Lihat ayat dan bacaan yang kamu tandai.</p></div>→</button>
-        <button class="goal-option" onclick="showView('onboarding')"><div class="iconbox">🎯</div><div><h3>Ubah goals</h3><p>Atur ulang target Qur'anmu.</p></div>→</button>
-        <button class="goal-option" onclick="showView('settings')"><div class="iconbox">🔔</div><div><h3>Pengingat</h3><p>Atur notifikasi ibadah.</p></div>→</button>
-        <button class="goal-option" onclick="logout()"><div class="iconbox" style="background:#fff1ef;color:#b24a4a">⎋</div><div><h3 style="color:#b24a4a">Keluar dari akun</h3><p>Akhiri sesi di perangkat ini.</p></div></button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+        <button class="btn" onclick="saveProfileName()">Simpan perubahan</button>
+        <button class="btn danger" onclick="logout()">⎋ Keluar dari akun</button>
       </div>
     </div>
   </div>
@@ -1255,12 +1279,13 @@ try {
 <!-- Dashboard personal -->
 <section id="view-dashboard" class="view">
   <div class="dash-top"><div><div class="eyebrow">Personal dashboard</div><h1 id="dash-greeting">Assalamu'alaikum! 🌿</h1><div class="muted">Perjalanan kecil yang konsisten tetap berarti.</div></div><div class="date-chip">✧ My Quractive Journey</div></div>
-  <div class="welcome"><div><div class="eyebrow" style="color:#d5e9df">YOUR JOURNEY TODAY</div><h2 id="welcome-title">Mulai dari satu ayat.</h2><p id="welcome-text">Luangkan waktu untuk membaca dan memahami Al-Qur'an sesuai ritmemu.</p></div><div class="welcome-mark"><img src="icon-512.png" alt="Logo Quractive"></div></div>
+  <div class="welcome"><div><div class="eyebrow" style="color:#d5e9df">HADITS HARI INI</div><h2 id="welcome-title" class="hadith-text">Memuat hadits…</h2><p id="welcome-text"></p></div><div class="welcome-mark"><img src="icon-512.png" alt="Logo Quractive"></div></div>
    <div class="streak-card">
   <div class="streak-flame" id="streak-flame">🔥</div>
   <div class="streak-info"><b id="streak-count">0 hari</b><span id="streak-text"></span></div>
   <div class="streak-week" id="streak-week"></div>
 </div>
+
 
 <div class="menu-grid">
   <button class="menu-tile" onclick="showView('quran')"><i>📖</i>Al-Qur'an</button>
@@ -1269,6 +1294,7 @@ try {
   <button class="menu-tile" onclick="showView('settings')"><i>🔔</i>Pengingat</button>
   <button class="menu-tile" onclick="showView('goals')"><i>🎯</i>Goals</button>
   <button class="menu-tile" onclick="showView('bookmark')"><i>🔖</i>Bookmark</button>
+  <button class="menu-tile" onclick="showView('channel')"><i>📢</i>Komunitas</button>
 </div>
 </section>
 
@@ -1425,7 +1451,40 @@ try {
 
   <div class="notice">Ketuk ikon 🔖 di samping ayat untuk menyimpannya ke folder pilihanmu.</div>
 </section>
+<!-- Komunitas -->
+<section id="view-channel" class="view">
+  <div class="eyebrow">Berbagi · Terhubung · Bermanfaat</div>
+  <h1 class="h1" style="font-size:38px">Komunitas 📢</h1>
+  <p class="lead">Bagikan info pengajian, kajian, atau ajakan kebaikan ke sesama pengguna Quractive.</p>
 
+  <div class="card" style="margin-top:22px">
+    <div class="card-title"><h3>✍️ Tulis pesan</h3><span class="muted" id="ch-count">0/500</span></div>
+    <div class="field">
+      <label for="ch-cat">Kategori</label>
+      <select id="ch-cat">
+        <option value="pengajian">🕌 Pengajian</option>
+        <option value="info">📢 Info</option>
+        <option value="event">📅 Event</option>
+        <option value="doa">🤲 Doa &amp; Ajakan</option>
+        <option value="lain">💬 Lainnya</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="ch-place">Lokasi / waktu (opsional)</label>
+      <input id="ch-place" type="text" maxlength="80" placeholder="mis. Masjid Al-Ikhlas, Sabtu 19.30">
+    </div>
+    <div class="field">
+      <label for="ch-text">Pesan</label>
+      <textarea id="ch-text" rows="4" maxlength="500" placeholder="Tulis info yang bermanfaat untuk yang lain..." oninput="document.getElementById('ch-count').textContent=this.value.length+'/500'"></textarea>
+    </div>
+    <button class="btn" id="ch-send" onclick="postChannel()">Kirim ke semua</button>
+  </div>
+
+  <div class="bm-chips" id="ch-filter" style="margin-top:22px"></div>
+  <div id="ch-list" style="margin-top:16px"><div class="muted">Memuat pesan...</div></div>
+
+  <div class="notice">Pesan dapat dilihat semua pengguna. Gunakan bahasa yang baik dan hanya bagikan info yang benar.</div>
+</section>
 <!-- Game -->
 <section id="view-game" class="view active">
   <div class="eyebrow">Hafiz Quest · Murajaah game</div>
@@ -1607,7 +1666,15 @@ import {
   getFirestore,
   doc,
   setDoc,
-  getDoc
+  getDoc,
+  collection,
+  addDoc,
+  deleteDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1697,7 +1764,8 @@ window.quractiveDb = db;
 window.quractiveSetDoc = setDoc;
 window.quractiveDoc = doc;
 window.quractiveGetDoc = getDoc;
-  
+window.quractiveFS = { collection, addDoc, deleteDoc, doc, query, orderBy, limit, onSnapshot, serverTimestamp };
+window.quractiveCollection = collection;
 function enterApp() {
   document.body.classList.add("logged-in");
   if (window.refreshProfileUI) window.refreshProfileUI(auth.currentUser);
@@ -1885,12 +1953,37 @@ function refreshProfileUI(user){
   loadPhoto(user);
 }
 async function saveProfileName(){
-  const name=document.getElementById('profile-name-input').value.trim();
-  if(!name){toast('Nama tidak boleh kosong.');return}
+  const name = document.getElementById('profile-name-input').value.trim();
+  if(!name){ toast('Nama tidak boleh kosong.'); return }
+  const user = window.quractiveAuth && window.quractiveAuth.currentUser;
+  if(!user){ toast('Silakan login dulu.'); return }
+
   try{
-    await window.updateDisplayName(name);
+    // Foto disimpan dulu, baru nama (supaya refreshProfileUI membaca foto terbaru)
+    if(pendingPhoto){
+      try{ localStorage.setItem(photoKey(user.uid), pendingPhoto) }catch(e){}
+      await window.quractiveSetDoc(
+        window.quractiveDoc(window.quractiveDb,'users',user.uid),
+        {photo: pendingPhoto, updatedAt: new Date().toISOString()},
+        {merge:true}
+      );
+    }else if(pendingPhotoRemove){
+      try{ localStorage.removeItem(photoKey(user.uid)) }catch(e){}
+      await window.quractiveSetDoc(
+        window.quractiveDoc(window.quractiveDb,'users',user.uid),
+        {photo:''},
+        {merge:true}
+      );
+    }
+    pendingPhoto = null;
+    pendingPhotoRemove = false;
+
+    await window.updateDisplayName(name);   // ini memanggil refreshProfileUI -> loadPhoto
     toast('Profil berhasil diperbarui.');
-  }catch(e){toast('Gagal menyimpan profil. Coba lagi.')}
+  }catch(e){
+    console.error(e);
+    toast('Gagal menyimpan profil. Coba lagi.');
+  }
 }
 
 /* ===== FOTO PROFIL ===== */
@@ -1925,41 +2018,56 @@ async function loadPhoto(user){
     }
   }catch(e){}
 }
+let pendingPhoto = null;        // foto baru yang belum disimpan
+let pendingPhotoRemove = false; // permintaan hapus foto yang belum disimpan
+
+// Pratinjau hanya di kartu profil (avatar pojok atas tidak ikut berubah)
+function previewAvatar(src){
+  const el = document.getElementById('avatar-lg');
+  if(!el) return;
+  el.textContent = '';
+  if(src){
+    const img = new Image();
+    img.src = src; img.alt = 'Foto profil';
+    el.appendChild(img);
+  }else{
+    const nm = document.getElementById('pm-name').textContent.trim();
+    el.textContent = nm[0] || 'Q';
+  }
+}
+
 function pickPhoto(input){
-  const file=input.files&&input.files[0];
-  input.value='';
-  if(!file)return;
-  if(!file.type.startsWith('image/')){toast('Pilih file gambar ya.');return}
-  const user=window.quractiveAuth&&window.quractiveAuth.currentUser;
-  if(!user){toast('Silakan login dulu.');return}
-  const reader=new FileReader();
-  reader.onload=()=>{
-    const img=new Image();
-    img.onload=async()=>{
-      // potong persegi dari tengah, kecilkan jadi 256px
-      const size=256,s=Math.min(img.width,img.height);
-      const c=document.createElement('canvas');c.width=c.height=size;
+  const file = input.files && input.files[0];
+  input.value = '';
+  if(!file) return;
+  if(!file.type.startsWith('image/')){ toast('Pilih file gambar ya.'); return }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const size = 256, s = Math.min(img.width, img.height);
+      const c = document.createElement('canvas'); c.width = c.height = size;
       c.getContext('2d').drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,size,size);
-      const data=c.toDataURL('image/jpeg',0.85);
-      try{localStorage.setItem(photoKey(user.uid),data)}catch(e){}
-      applyAvatar(data);
-      try{
-        await window.quractiveSetDoc(window.quractiveDoc(window.quractiveDb,'users',user.uid),{photo:data,updatedAt:new Date().toISOString()},{merge:true});
-        toast('Foto profil diperbarui.');
-      }catch(e){console.error('Gagal simpan foto:',e);toast('Foto tersimpan di perangkat ini, tapi gagal disinkronkan ('+(e.code||'error')+').')}
+      pendingPhoto = c.toDataURL('image/jpeg', 0.85);
+      pendingPhotoRemove = false;
+      previewAvatar(pendingPhoto);
+      const rm = document.getElementById('photo-remove');
+      if(rm) rm.style.display = '';
+      toast('Foto dipilih. Tekan "Simpan perubahan" untuk menyimpan.');
     };
-    img.onerror=()=>toast('Gambar tidak bisa dibaca.');
-    img.src=reader.result;
+    img.onerror = () => toast('Gambar tidak bisa dibaca.');
+    img.src = reader.result;
   };
   reader.readAsDataURL(file);
 }
-async function removePhoto(){
-  const user=window.quractiveAuth&&window.quractiveAuth.currentUser;
-  if(!user)return;
-  try{localStorage.removeItem(photoKey(user.uid))}catch(e){}
-  loadPhoto(user);
-  try{await window.quractiveSetDoc(window.quractiveDoc(window.quractiveDb,'users',user.uid),{photo:''},{merge:true})}catch(e){}
-  toast('Foto profil dihapus.');
+
+function removePhoto(){
+  pendingPhoto = null;
+  pendingPhotoRemove = true;
+  previewAvatar('');
+  const rm = document.getElementById('photo-remove');
+  if(rm) rm.style.display = 'none';
+  toast('Foto akan dihapus setelah kamu menekan "Simpan perubahan".');
 }
 
 /* ===== MASJID TERDEKAT (Google Maps) ===== */
@@ -2012,21 +2120,20 @@ function cekMasjidTerdekat(){
 }
 
 function showView(name, fromPop){
-  // catat ke riwayat browser supaya tombol back bisa mundur antar halaman
-  if(!fromPop){
-    try{
-      const cur = history.state && history.state.view;
-      if(cur === undefined) history.replaceState({view:name}, '');
-      else if(cur !== name) history.pushState({view:name}, '');
-    }catch(e){}
+  if(pendingPhoto || pendingPhotoRemove){
+    pendingPhoto = null;
+    pendingPhotoRemove = false;
+    const u = window.quractiveAuth && window.quractiveAuth.currentUser;
+    if(u) refreshProfileUI(u);   // kembalikan ke foto yang tersimpan
   }
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+name));
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
-  window.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo(0,0);
   if(name==='calendar')renderCalendar();
   if(name==='quran')renderSurah();
   if(name==='game')renderJuzMap();
   if(name==='bookmark')renderBookmarks();
+  if(name==='channel')startChannel();
 }
 window.addEventListener('popstate', e=>{
   const v = e.state && e.state.view;
@@ -2057,9 +2164,6 @@ function saveGoals(){
   try{localStorage.setItem('quractiveGoals',JSON.stringify([...chosenGoals]));localStorage.setItem('quractiveMinutes',mins)}catch(e){}
   document.getElementById('daily-min').textContent=mins;
   document.getElementById('goal-total').textContent=chosenGoals.size;
-  const first=goalNames[[...chosenGoals][0]];
-  document.getElementById('welcome-title').textContent=first[0];
-  document.getElementById('welcome-text').textContent='Kita mulai dengan langkah kecil yang realistis. Pilih aktivitas di bawah ini untuk melanjutkan perjalananmu.';
   renderJourney();
   localStorage.removeItem("quractiveNeedsOnboarding");
   showView('dashboard');
@@ -2096,7 +2200,7 @@ function backToQuranList(){
   document.getElementById('quran-reader-panel').style.display='none';
   document.getElementById('quran-select-panel').style.display='block';
 
-  window.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo(0,0);
 }
 
 function changeQuranMode(){
@@ -2541,7 +2645,7 @@ async function openSurah(n){
   document.getElementById('quran-select-panel').style.display='none';
   document.getElementById('quran-reader-panel').style.display='block';
 
-  window.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo(0,0);
 
   body.innerHTML='Memuat surah...';
 
@@ -2558,7 +2662,7 @@ async function openSurah(n){
     refreshBmIcons();
 
     body.scrollTop=0;
-    window.scrollTo({top:0,behavior:'smooth'});
+    window.scrollTo(0,0);
 
   }catch(e){
     body.textContent='Gagal memuat surah. Cek koneksi internet.';
@@ -2572,7 +2676,7 @@ async function openJuz(j){
   document.getElementById('quran-select-panel').style.display='none';
   document.getElementById('quran-reader-panel').style.display='block';
 
-  window.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo(0,0);
 
   body.innerHTML='Memuat juz...';
 
@@ -2624,7 +2728,7 @@ async function openJuz(j){
     refreshBmIcons();
 
     body.scrollTop=0;
-    window.scrollTo({top:0,behavior:'smooth'});
+    window.scrollTo(0,0);
 
   }catch(e){
     body.textContent='Gagal memuat juz. Cek koneksi internet.';
@@ -3487,7 +3591,179 @@ document.addEventListener('animationend', function(e){
     e.target.classList.remove('tap-feedback');
   }
 });
+/* ===== KOMUNITAS / CHANNEL ===== */
+let channelUnsub=null,channelFilter='all',channelData=[];
+const CH_CATS={pengajian:'🕌 Pengajian',info:'📢 Info',event:'📅 Event',doa:'🤲 Doa & Ajakan',lain:'💬 Lainnya'};
 
+function chTimeAgo(ms){
+  const s=Math.floor((Date.now()-ms)/1000);
+  if(s<60)return 'baru saja';
+  if(s<3600)return Math.floor(s/60)+' menit lalu';
+  if(s<86400)return Math.floor(s/3600)+' jam lalu';
+  if(s<604800)return Math.floor(s/86400)+' hari lalu';
+  return new Date(ms).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+}
+
+function startChannel(){
+  if(channelUnsub)return;
+  const FS=window.quractiveFS,db=window.quractiveDb;
+  if(!FS||!db)return;
+  const q=FS.query(FS.collection(db,'channel_posts'),FS.orderBy('createdAt','desc'),FS.limit(50));
+  channelUnsub=FS.onSnapshot(q,snap=>{
+    channelData=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderChannel();
+  },err=>{
+    console.error('Channel error:',err);
+    channelUnsub=null;
+    document.getElementById('ch-list').innerHTML='<div class="muted">Gagal memuat pesan. Cek aturan Firestore dan koneksi internet.</div>';
+  });
+}
+
+function setChannelFilter(k){channelFilter=k;renderChannel()}
+
+function renderChannel(){
+  const box=document.getElementById('ch-list'),filter=document.getElementById('ch-filter');
+  if(!box||!filter)return;
+  const all=[['all','🔖 Semua'],...Object.entries(CH_CATS)];
+  filter.innerHTML=all.map(([id,label])=>
+    `<button type="button" class="bm-chip ${channelFilter===id?'sel':''}" onclick="setChannelFilter('${id}')">${label}</button>`
+  ).join('');
+
+  const me=window.quractiveAuth?.currentUser?.uid;
+  const list=channelData.filter(p=>channelFilter==='all'||p.cat===channelFilter);
+  box.innerHTML=list.length?list.map(p=>{
+    const ms=p.createdAt?.toMillis?.()||Date.now();
+    const name=p.name||'Pengguna';
+    return `<div class="ch-post">
+      <div class="ch-head">
+        <div class="ch-avatar">${bmEsc(name.trim()[0]||'Q')}</div>
+        <div class="ch-meta"><b>${bmEsc(name)}</b><small>${chTimeAgo(ms)}</small></div>
+        ${p.uid===me?`<button class="ch-del" onclick="deleteChannelPost('${bmEsc(p.id)}')" aria-label="Hapus pesan">🗑️</button>`:''}
+      </div>
+      <span class="ch-cat">${CH_CATS[p.cat]||CH_CATS.lain}</span>
+      <div class="ch-text">${bmEsc(p.text||'')}</div>
+      ${p.place?`<div class="ch-place">📍 ${bmEsc(p.place)}</div>`:''}
+    </div>`;
+  }).join(''):'<div class="muted">Belum ada pesan di kategori ini. Jadi yang pertama berbagi!</div>';
+}
+
+async function postChannel(){
+  const FS=window.quractiveFS,db=window.quractiveDb;
+  const user=window.quractiveAuth?.currentUser;
+  if(!user||!FS){toast('Silakan login dulu.');return}
+  const text=document.getElementById('ch-text').value.trim();
+  const place=document.getElementById('ch-place').value.trim();
+  const cat=document.getElementById('ch-cat').value;
+  if(text.length<5){toast('Tulis pesan minimal 5 karakter.');return}
+  let last=0;try{last=Number(localStorage.getItem('quractiveChLast')||0)}catch(e){}
+  if(Date.now()-last<30000){toast('Tunggu 30 detik sebelum kirim pesan lagi.');return}
+
+  const btn=document.getElementById('ch-send');
+  btn.disabled=true;btn.textContent='Mengirim...';
+  try{
+    await FS.addDoc(FS.collection(db,'channel_posts'),{
+      uid:user.uid,
+      name:user.displayName||(user.email?user.email.split('@')[0]:'Pengguna'),
+      cat,place,text,
+      createdAt:FS.serverTimestamp()
+    });
+    document.getElementById('ch-text').value='';
+    document.getElementById('ch-place').value='';
+    document.getElementById('ch-count').textContent='0/500';
+    try{localStorage.setItem('quractiveChLast',String(Date.now()))}catch(e){}
+    toast('Pesan terkirim ke semua pengguna 📢');
+  }catch(e){
+    console.error(e);
+    toast('Gagal mengirim. Cek aturan Firestore.');
+  }
+  btn.disabled=false;btn.textContent='Kirim ke semua';
+}
+
+async function deleteChannelPost(id){
+  if(!confirm('Hapus pesan ini untuk semua pengguna?'))return;
+  try{
+    const FS=window.quractiveFS;
+    await FS.deleteDoc(FS.doc(window.quractiveDb,'channel_posts',id));
+    toast('Pesan dihapus.');
+  }catch(e){
+    console.error(e);
+    toast('Gagal menghapus pesan.');
+  }
+}
+/* ===== HADITS HARIAN (api.hadith.gading.dev) ===== */
+
+const HADITH_API='https://api.hadith.gading.dev/books';
+const HADITH_BOOKS=[
+  {slug:'bukhari',name:'Bukhari',max:7000},
+  {slug:'muslim',name:'Muslim',max:5300},
+  {slug:'tirmidzi',name:'Tirmidzi',max:3800},
+  {slug:'abu-daud',name:'Abu Daud',max:4500},
+  {slug:'nasai',name:'An-Nasa’i',max:5600},
+  {slug:'ibnu-majah',name:'Ibnu Majah',max:4300}
+];
+const HADITH_FALLBACK=[
+  {t:'Sesungguhnya setiap amal tergantung pada niatnya, dan setiap orang akan mendapatkan sesuai apa yang ia niatkan.',s:'HR. Bukhari & Muslim'},
+  {t:'Sebaik-baik kalian adalah orang yang belajar Al-Qur’an dan mengajarkannya.',s:'HR. Bukhari'},
+  {t:'Amalan yang paling dicintai Allah adalah yang dilakukan terus-menerus meskipun sedikit.',s:'HR. Bukhari & Muslim'},
+  {t:'Permudahlah dan jangan mempersulit, berilah kabar gembira dan jangan membuat orang lari.',s:'HR. Bukhari & Muslim'},
+  {t:'Barangsiapa beriman kepada Allah dan hari akhir, hendaklah ia berkata baik atau diam.',s:'HR. Bukhari & Muslim'}
+];
+
+function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function deviceId(){
+  try{
+    let id=localStorage.getItem('quractiveDeviceId');
+    if(!id){id=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('quractiveDeviceId',id)}
+    return id;
+  }catch(e){return 'anon'}
+}
+function cleanHadith(t){return String(t||'').replace(/\s+/g,' ').trim()}
+function validHadith(t){
+  return t.length>=40&&t.length<=320&&!/^(telah|menceritakan|mengabarkan|memberitahukan)/i.test(t);
+}
+async function fetchHadithCandidate(seed,i){
+  const h=hashStr(seed+':'+i);
+  const book=HADITH_BOOKS[h%HADITH_BOOKS.length];
+  const num=(Math.floor(h/HADITH_BOOKS.length)%book.max)+1;
+  const ctrl=new AbortController();
+  const to=setTimeout(()=>ctrl.abort(),8000);
+  try{
+    const res=await fetch(`${HADITH_API}/${book.slug}/${num}`,{signal:ctrl.signal});
+    const c=(await res.json()).data.contents;
+    const text=cleanHadith(c.id);
+    return validHadith(text)?{t:text,s:`HR. ${book.name} No. ${c.number}`}:null;
+  }catch(e){return null}
+  finally{clearTimeout(to)}
+}
+async function pickHadith(seed){
+  const results=await Promise.all(Array.from({length:12},(_,i)=>fetchHadithCandidate(seed,i)));
+  return results.find(Boolean)||null;
+}
+function showHadith(h){
+  document.getElementById('welcome-title').textContent='“'+h.t+'”';
+  document.getElementById('welcome-text').textContent='— '+h.s;
+}
+async function loadHadith(forceNew){
+  const day=dayKey(new Date());
+  const btn=document.getElementById('hadith-next');
+  if(!forceNew){
+    try{
+      const c=JSON.parse(localStorage.getItem('quractiveHadith')||'null');
+      if(c&&c.day===day&&c.data){showHadith(c.data);return}
+    }catch(e){}
+  }
+  if(btn){btn.disabled=true;btn.textContent='Memuat…'}
+  const seed=deviceId()+':'+day+(forceNew?':'+Date.now():'');
+  let h=await pickHadith(seed);
+  if(!h){
+    h=HADITH_FALLBACK[hashStr(seed)%HADITH_FALLBACK.length];
+    if(forceNew)toast('Tidak bisa mengambil dari server, menampilkan hadits cadangan.');
+  }
+  showHadith(h);
+  try{localStorage.setItem('quractiveHadith',JSON.stringify({day,data:h}))}catch(e){}
+  if(btn){btn.disabled=false;btn.textContent='🔄 Hadits lain'}
+}
+loadHadith();
 renderJuzMap();renderCalendar();loadFastPrefs();loadSavedState();updateGameStats();updateNotifStatus();startReminderLoop();</script>
 
 <script>
