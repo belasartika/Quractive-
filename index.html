@@ -2235,6 +2235,16 @@ function cekMasjidTerdekat(){
 }
 
 function showView(name, fromPop){
+  // Simpan riwayat perpindahan halaman untuk tombol Back HP
+  if(!fromPop){
+    if(!history.state || history.state.view !== name){
+      history.pushState(
+        {view:name},
+        '',
+        '#' + name
+      );
+    }
+  }
   if(pendingPhoto || pendingPhotoRemove){
     pendingPhoto = null;
     pendingPhotoRemove = false;
