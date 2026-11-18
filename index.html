@@ -2093,7 +2093,22 @@ async function saveProfileName(){
     pendingPhoto = null;
     pendingPhotoRemove = false;
 
-    await window.updateDisplayName(name);   // ini memanggil refreshProfileUI -> loadPhoto
+    await window.updateDisplayName(name); 
+    const publicPhoto =
+      localStorage.getItem(photoKey(user.uid)) || '';
+
+    await window.quractiveSetDoc(
+      window.quractiveDoc(
+        window.quractiveDb,
+        'public_profiles',
+        user.uid
+      ),
+      {
+        name: name,
+        photo: publicPhoto
+      },
+      { merge: true }
+    );  // ini memanggil refreshProfileUI -> loadPhoto
     toast('Profil berhasil diperbarui.');
   }catch(e){
     console.error(e);
@@ -3635,7 +3650,7 @@ async function saveReminder() {
 
   try {
     await window.quractiveSetDoc(
-      window.quractiveDoc(window.quractiveDb, 'users', user.uid),
+      window.quractiveDoc(window.quractiveDb, 'public_profiles', user.uid),
       {
         reminderDay: day,
         reminderTime: time,
@@ -3757,7 +3772,7 @@ async function loadChannelPhotos(){
 
     try{
       const snap=await window.quractiveGetDoc(
-        window.quractiveDoc(db,'users',p.uid)
+        window.quractiveDoc(db,'public_profiles',p.uid)
       );
       channelPhotoCache[p.uid]=snap.exists()
         ? snap.data().photo||''
